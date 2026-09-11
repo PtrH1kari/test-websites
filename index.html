@@ -114,29 +114,72 @@
     border:1px solid var(--line);background:var(--card);color:var(--ink);width:150px;
   }
 
+  /* ---------- сцена и персонаж ---------- */
+  .stage{
+    flex:0 0 auto;position:relative;
+    height:150px;overflow:hidden;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, var(--sky1,#DDE9F2), var(--sky2,#EFE7D8));
+  }
+  .stage svg.scene{position:absolute;inset:0;width:100%;height:100%}
+  .char{
+    position:absolute;left:16px;bottom:0;width:120px;height:130px;
+    transform-origin:bottom center;
+  }
+  .char svg{width:100%;height:100%;overflow:visible}
+  .char .mouth{transform-box:fill-box;transform-origin:center;transform:scaleY(.5)}
+  .char.talking .mouth{animation:talk .32s ease-in-out infinite alternate}
+  @keyframes talk{from{transform:scaleY(.35)}to{transform:scaleY(1.2)}}
+  .char .lid{transform-box:fill-box;transform-origin:top;transform:scaleY(0);animation:blink 6s infinite}
+  @keyframes blink{0%,94%{transform:scaleY(0)}96%{transform:scaleY(1)}98%{transform:scaleY(0)}}
+  .char.listening{animation:lean 2.2s ease-in-out infinite}
+  @keyframes lean{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg)}}
+  .role{
+    position:absolute;right:12px;top:10px;
+    font-size:12px;color:var(--ink);
+    background:rgba(255,255,255,.82);
+    border-radius:99px;padding:4px 11px;
+  }
+  .earcue{
+    position:absolute;left:120px;bottom:78px;
+    font-size:12px;color:var(--teal);
+    background:rgba(255,255,255,.9);border-radius:99px;padding:4px 10px;
+  }
+  .earcue[hidden]{display:none}
+
   /* ---------- transcript ---------- */
   .transcript{
     flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
-    padding:20px 20px 8px;display:flex;flex-direction:column;gap:14px;
+    padding:20px 20px 8px;display:flex;flex-direction:column;gap:18px;
+    background:linear-gradient(180deg, var(--sky1,#DDE9F2), #fff 62%);
+    background:linear-gradient(180deg, color-mix(in srgb, var(--sky1,#DDE9F2) 50%, #fff), #fff 68%);
   }
   .bubble{
-    font-family:var(--serif);font-size:17px;line-height:1.5;
-    max-width:88%;padding:12px 15px;border-radius:var(--radius);
+    font-family:var(--serif);font-size:17px;line-height:1.45;
+    max-width:86%;padding:14px 18px;position:relative;
+    background:#fff;border-radius:26px;
+    box-shadow:0 2px 10px rgba(23,36,43,.10);
   }
   .bubble .who{
     display:block;font-family:var(--sans);font-size:11.5px;
     color:var(--ink-soft);margin-bottom:4px;
   }
-  .bubble.alex{background:var(--teal-soft);border-bottom-left-radius:4px}
-  .bubble.me{align-self:flex-end;background:var(--card);border:1px solid var(--line);border-bottom-right-radius:4px}
-  .say{
-    font-family:var(--sans);font-size:15px;background:none;border:none;
-    cursor:pointer;color:var(--teal);padding:2px 4px;margin-left:4px;vertical-align:middle;
+  /* «хвост» облачка — два кружка в сторону говорящего */
+  .bubble::before,.bubble::after{content:"";position:absolute;background:inherit;border-radius:50%}
+  .bubble.alex{align-self:flex-start;margin-left:14px}
+  .bubble.alex::before{width:14px;height:14px;left:-7px;bottom:14px;box-shadow:0 2px 6px rgba(23,36,43,.08)}
+  .bubble.alex::after{width:7px;height:7px;left:-15px;bottom:5px}
+  .bubble.me{
+    align-self:flex-end;margin-right:14px;
+    background:var(--teal-soft);
   }
+  .bubble.me::before{width:14px;height:14px;right:-7px;bottom:14px}
+  .bubble.me::after{width:7px;height:7px;right:-15px;bottom:5px}
   .fix{
-    align-self:flex-end;max-width:88%;background:var(--amber-soft);
-    border-radius:var(--radius);border-bottom-right-radius:4px;
-    padding:11px 14px;font-size:14.5px;line-height:1.5;
+    align-self:flex-end;max-width:86%;background:var(--amber-soft);
+    border-radius:20px;margin-right:14px;
+    padding:12px 16px;font-size:14.5px;line-height:1.5;
+    box-shadow:0 2px 8px rgba(154,100,18,.10);
   }
   .fix .fix-head{font-size:11.5px;color:var(--amber);margin-bottom:6px}
   .fix .was{font-family:var(--serif);text-decoration:line-through;color:var(--ink-soft)}
@@ -219,6 +262,10 @@
     .bubble,.fix{max-width:100%}
     .setup-line{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
     .partner{display:none}
+    .stage{height:126px}
+    .char{width:100px;height:108px;left:10px}
+    .earcue{left:104px;bottom:64px}
+    .bubble{font-size:16px;max-width:92%}
   }
   @media (prefers-reduced-motion:reduce){.mic.on::after{animation:none;opacity:.5}}
   :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
@@ -236,7 +283,6 @@
       </div>
     </div>
     <div class="partner">
-      <div class="avatar" aria-hidden="true">A</div>
       <div class="partner-text">
         <b>Алекс</b> — собеседник из Чикаго.
         <span id="partnerNote">Говорит просто и медленно, поправляет по-дружески.</span>
@@ -261,7 +307,13 @@
         <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off">
       </label>
     </div>
+    <label class="field">
+      <span>Голос Алекса — выберите самый живой из доступных на устройстве</span>
+      <select id="voiceSel" style="width:100%;font:inherit;font-size:16px;padding:9px 10px;border:1px solid #DCC79B;border-radius:8px;background:#fff;color:var(--ink)"></select>
+    </label>
+    <p style="font-size:13px">На iPhone красивые голоса ставятся отдельно: «Настройки» → «Универсальный доступ» → «Контент с озвучиванием» → «Голоса» → English. Скачайте Ava, Zoe или Siri-голос и вернитесь сюда — он появится в списке.</p>
     <div class="row">
+      <button class="close" id="voiceTest">Проверить голос</button>
       <button class="save" id="settingsSave">Сохранить</button>
       <button class="close" id="settingsClose">Закрыть</button>
       <span class="said" id="settingsSaid"></span>
@@ -282,6 +334,13 @@
       <button class="chip" data-level="B1" aria-pressed="false">Средний</button>
       <button class="chip" data-level="B2" aria-pressed="false">Уверенный</button>
     </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="scene" id="scene" aria-hidden="true"></div>
+    <div class="char" id="char" role="img" aria-label="Алекс, собеседник"></div>
+    <div class="earcue" id="earcue" hidden>слушает…</div>
+    <div class="role" id="role">Алекс · новый знакомый</div>
   </div>
 
   <div class="transcript" id="transcript" aria-live="polite">
@@ -511,6 +570,249 @@ const SCRIPTS = {
      suggest:["Maybe travel.","Something about music.","You choose."]}
   ]
 };
+
+
+/* ============================================================
+   1b. Фоны сцен и персонаж (инлайн SVG — работает без сети)
+   ============================================================ */
+const SCENES = {
+  smalltalk:{sky1:"#DCE8F2", sky2:"#E7EFE4", role:"новый знакомый", shirt:"#3E7A8C", prop:"scarf", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#DCE8F2"/>
+      <circle cx="705" cy="58" r="32" fill="#FAE6A6"/>
+      <g fill="#C2D2DD">
+        <rect x="30" y="96" width="72" height="150"/><rect x="118" y="58" width="56" height="188"/>
+        <rect x="470" y="84" width="66" height="162"/><rect x="556" y="120" width="94" height="126"/>
+      </g>
+      <g fill="#A6BCC9">
+        <rect x="44" y="112" width="14" height="16"/><rect x="72" y="112" width="14" height="16"/>
+        <rect x="44" y="146" width="14" height="16"/><rect x="72" y="146" width="14" height="16"/>
+        <rect x="132" y="76" width="12" height="16"/><rect x="150" y="76" width="12" height="16"/>
+        <rect x="132" y="110" width="12" height="16"/><rect x="150" y="110" width="12" height="16"/>
+        <rect x="486" y="102" width="14" height="16"/><rect x="508" y="102" width="14" height="16"/>
+        <rect x="572" y="138" width="16" height="16"/><rect x="606" y="138" width="16" height="16"/>
+      </g>
+      <rect y="246" width="800" height="54" fill="#C9D8C4"/>
+      <rect y="246" width="800" height="9" fill="#B4C7AE"/>
+      <g><rect x="296" y="168" width="13" height="80" fill="#9B7C58"/><circle cx="302" cy="156" r="44" fill="#A7C59A"/></g>
+      <g><rect x="398" y="192" width="10" height="56" fill="#9B7C58"/><circle cx="403" cy="182" r="31" fill="#93BA88"/></g>
+      <g fill="#93A8B6"><rect x="612" y="206" width="96" height="9" rx="4"/><rect x="620" y="215" width="8" height="32"/><rect x="692" y="215" width="8" height="32"/></g>
+    </svg>`},
+
+  cafe:{sky1:"#F1E2CC", sky2:"#E8D6BB", role:"бариста", shirt:"#5C6B63", prop:"apron", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EFE0CB"/>
+      <g stroke="#A5865F" stroke-width="3">
+        <line x1="210" y1="0" x2="210" y2="52"/><line x1="330" y1="0" x2="330" y2="34"/><line x1="450" y1="0" x2="450" y2="60"/>
+      </g>
+      <g fill="#F7D98D"><circle cx="210" cy="62" r="15"/><circle cx="330" cy="44" r="15"/><circle cx="450" cy="70" r="15"/></g>
+      <rect x="60" y="74" width="146" height="104" rx="7" fill="#3D4A44"/>
+      <g stroke="#D8E2D6" stroke-width="3" stroke-linecap="round">
+        <line x1="78" y1="98" x2="176" y2="98"/><line x1="78" y1="118" x2="152" y2="118"/>
+        <line x1="78" y1="138" x2="166" y2="138"/><line x1="78" y1="158" x2="128" y2="158"/>
+      </g>
+      <rect x="512" y="92" width="252" height="9" rx="4" fill="#B78D5E"/>
+      <g fill="#F3EFE6" stroke="#D6CDBC"><circle cx="548" cy="80" r="11"/><circle cx="592" cy="80" r="11"/><circle cx="636" cy="80" r="11"/><circle cx="680" cy="80" r="11"/><circle cx="724" cy="80" r="11"/></g>
+      <rect x="566" y="126" width="128" height="78" rx="7" fill="#9FAAA6"/>
+      <rect x="600" y="152" width="44" height="34" rx="4" fill="#6C7874"/>
+      <rect x="590" y="118" width="80" height="10" rx="5" fill="#7E8985"/>
+      <rect y="204" width="800" height="96" fill="#8D6A47"/>
+      <rect y="196" width="800" height="14" rx="4" fill="#B58658"/>
+      <g fill="#F3EFE6"><rect x="270" y="176" width="34" height="22" rx="4"/><rect x="266" y="170" width="42" height="8" rx="4"/></g>
+    </svg>`},
+
+  shop:{sky1:"#F2EFE8", sky2:"#E6E6DE", role:"продавец", shirt:"#6E5B8A", prop:"badge", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#F1EEE6"/>
+      <rect y="250" width="800" height="50" fill="#DED8CB"/>
+      <rect x="120" y="78" width="520" height="7" rx="3.5" fill="#A9A296"/>
+      <g stroke="#8E8778" stroke-width="2" fill="none">
+        <path d="M170 85 v14"/><path d="M240 85 v14"/><path d="M310 85 v14"/><path d="M380 85 v14"/><path d="M450 85 v14"/><path d="M520 85 v14"/><path d="M590 85 v14"/>
+      </g>
+      <g>
+        <path d="M150 99 h40 l16 82 h-72 z" fill="#C2766A"/>
+        <path d="M222 99 h36 l14 96 h-64 z" fill="#5E82A6"/>
+        <path d="M292 99 h36 l12 74 h-60 z" fill="#7E9A72"/>
+        <path d="M362 99 h36 l16 92 h-68 z" fill="#D9B26A"/>
+        <path d="M432 99 h36 l12 78 h-60 z" fill="#8E7BA6"/>
+        <path d="M502 99 h36 l14 88 h-64 z" fill="#6E9B96"/>
+        <path d="M572 99 h36 l12 70 h-60 z" fill="#C98F6B"/>
+      </g>
+      <g><rect x="672" y="96" width="92" height="154" rx="46" fill="#DCE6E6" stroke="#BFCBCB" stroke-width="4"/></g>
+      <g fill="#B9B2A4"><rect x="90" y="196" width="60" height="54" rx="5"/><rect x="98" y="186" width="44" height="12" rx="4"/></g>
+    </svg>`},
+
+  school:{sky1:"#E5EDE6", sky2:"#EFEADC", role:"друг из класса", shirt:"#496C8C", prop:"glasses", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EBEFE8"/>
+      <rect x="150" y="40" width="470" height="170" rx="6" fill="#34433C" stroke="#A98A62" stroke-width="9"/>
+      <g stroke="#D9E3D7" stroke-width="3" stroke-linecap="round" fill="none">
+        <line x1="186" y1="80" x2="330" y2="80"/><line x1="186" y1="104" x2="392" y2="104"/>
+        <path d="M186 140 q30 -26 60 0 q30 26 60 0"/>
+        <line x1="420" y1="140" x2="560" y2="140"/><line x1="420" y1="164" x2="500" y2="164"/>
+        <text x="186" y="188" fill="#D9E3D7" font-family="Georgia" font-size="26">Hello!</text>
+      </g>
+      <circle cx="700" cy="76" r="34" fill="#F4F1E6" stroke="#B5AD9B" stroke-width="4"/>
+      <g stroke="#4A5A52" stroke-width="3" stroke-linecap="round"><line x1="700" y1="76" x2="700" y2="58"/><line x1="700" y1="76" x2="714" y2="82"/></g>
+      <rect y="238" width="800" height="62" fill="#D8CDB8"/>
+      <g fill="#C0A177"><rect x="60" y="212" width="150" height="12" rx="4"/><rect x="70" y="224" width="10" height="34"/><rect x="190" y="224" width="10" height="34"/></g>
+      <g fill="#C0A177"><rect x="560" y="212" width="150" height="12" rx="4"/><rect x="570" y="224" width="10" height="34"/><rect x="690" y="224" width="10" height="34"/></g>
+    </svg>`},
+
+  hobbies:{sky1:"#E7E3EF", sky2:"#EFE8DF", role:"приятель", shirt:"#41515E", prop:"headphones", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EDE8F0"/>
+      <rect y="244" width="800" height="56" fill="#D7CFC2"/>
+      <rect x="430" y="54" width="300" height="172" rx="10" fill="#2C3640"/>
+      <rect x="444" y="68" width="272" height="144" rx="6" fill="#3E5A72"/>
+      <g opacity=".9"><circle cx="520" cy="130" r="26" fill="#7FD2C6"/><rect x="580" y="104" width="46" height="46" rx="6" fill="#F0C97A"/><path d="M660 156 l26 -46 l26 46 z" fill="#E38C7A"/></g>
+      <rect x="540" y="226" width="80" height="10" rx="5" fill="#2C3640"/>
+      <g><rect x="60" y="150" width="300" height="96" rx="16" fill="#8E7A6B"/><rect x="46" y="170" width="32" height="76" rx="12" fill="#7C6A5C"/><rect x="342" y="170" width="32" height="76" rx="12" fill="#7C6A5C"/>
+         <rect x="86" y="136" width="110" height="30" rx="12" fill="#A08A78"/><rect x="216" y="136" width="110" height="30" rx="12" fill="#A08A78"/></g>
+      <g><rect x="392" y="212" width="14" height="34" fill="#9B7C58"/><path d="M399 212 q-34 -14 -26 -46 q22 4 26 46" fill="#7FA872"/><path d="M399 212 q34 -18 28 -50 q-24 6 -28 50" fill="#8FB981"/></g>
+      <g fill="#4B5A64"><rect x="240" y="118" width="56" height="22" rx="11"/><circle cx="252" cy="129" r="4" fill="#B9C6CC"/><circle cx="284" cy="129" r="4" fill="#B9C6CC"/></g>
+    </svg>`},
+
+  travel:{sky1:"#D6E6F2", sky2:"#E9E4D8", role:"попутчик", shirt:"#2E6E8E", prop:"cap", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EDE8DE"/>
+      <path d="M150 226 v-116 q130 -66 260 0 v116 z" fill="#BFDCEF"/>
+      <path d="M150 226 v-116 q130 -66 260 0 v116 z" fill="none" stroke="#A3B5BE" stroke-width="7"/>
+      <line x1="280" y1="82" x2="280" y2="226" stroke="#A3B5BE" stroke-width="7"/>
+      <g fill="#F4F8FA"><ellipse cx="214" cy="132" rx="30" ry="11"/><ellipse cx="350" cy="112" rx="24" ry="9"/></g>
+      <g fill="#7E8E98" transform="translate(300,150) rotate(-12)">
+        <path d="M0 0 l70 -8 l16 -20 l10 18 l30 -4 l-30 12 l-10 18 l-16 -18 z"/>
+      </g>
+      <rect y="226" width="800" height="74" fill="#D9D2C4"/>
+      <g fill="#6E7C85"><rect x="470" y="176" width="230" height="16" rx="8"/>
+        <rect x="476" y="140" width="66" height="38" rx="8"/><rect x="550" y="140" width="66" height="38" rx="8"/><rect x="624" y="140" width="66" height="38" rx="8"/>
+        <rect x="486" y="192" width="10" height="34"/><rect x="676" y="192" width="10" height="34"/></g>
+      <g><rect x="80" y="188" width="62" height="46" rx="7" fill="#C2766A"/><rect x="100" y="178" width="22" height="12" rx="5" fill="#9C5B52"/><rect x="80" y="206" width="62" height="6" fill="#A85F55"/></g>
+    </svg>`},
+
+  doctor:{sky1:"#E3EDEF", sky2:"#EFF2F1", role:"врач", shirt:"#FFFFFF", prop:"coat", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EBF1F1"/>
+      <rect y="240" width="800" height="60" fill="#DCE4E3"/>
+      <g><rect x="440" y="150" width="300" height="52" rx="10" fill="#9CB6C4"/><rect x="440" y="128" width="90" height="30" rx="10" fill="#B4C9D3"/>
+         <rect x="452" y="202" width="12" height="38" fill="#7E93A0"/><rect x="716" y="202" width="12" height="38" fill="#7E93A0"/></g>
+      <g fill="#CBD9DC"><rect x="120" y="60" width="12" height="180"/><rect x="120" y="60" width="190" height="12" rx="6"/>
+         <path d="M132 72 h166 v150 q-40 -14 -82 0 q-42 14 -84 0 z" fill="#DCE7E9"/></g>
+      <g><rect x="600" y="58" width="86" height="64" rx="6" fill="#FFFFFF" stroke="#C3D2D4" stroke-width="3"/>
+         <rect x="636" y="70" width="14" height="40" fill="#C2766A"/><rect x="623" y="83" width="40" height="14" fill="#C2766A"/></g>
+      <g><rect x="352" y="196" width="14" height="44" fill="#9B7C58"/><path d="M359 196 q-32 -16 -24 -48 q22 6 24 48" fill="#7FA872"/><path d="M359 196 q32 -18 26 -50 q-24 6 -26 50" fill="#8FB981"/></g>
+    </svg>`},
+
+  phone:{sky1:"#E9E7DF", sky2:"#EFEAE0", role:"администратор ресторана", shirt:"#4C5A63", prop:"headset", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EEEAE0"/>
+      <rect y="238" width="800" height="62" fill="#D9CFC0"/>
+      <g><rect x="470" y="44" width="250" height="150" rx="8" fill="#BFDCEF" stroke="#A98A62" stroke-width="8"/>
+         <line x1="595" y1="52" x2="595" y2="186" stroke="#A98A62" stroke-width="6"/>
+         <ellipse cx="540" cy="96" rx="26" ry="10" fill="#F4F8FA"/></g>
+      <g fill="#A9865E"><rect x="80" y="176" width="300" height="14" rx="5"/><rect x="96" y="190" width="12" height="48"/><rect x="352" y="190" width="12" height="48"/></g>
+      <g><rect x="120" y="150" width="70" height="26" rx="4" fill="#F3EFE6" stroke="#CFC6B4"/><rect x="210" y="142" width="46" height="34" rx="4" fill="#C2766A"/>
+         <rect x="286" y="158" width="30" height="18" rx="4" fill="#7E8E98"/><rect x="292" y="150" width="18" height="10" rx="4" fill="#6E7C85"/></g>
+      <circle cx="400" cy="72" r="30" fill="#F4F1E6" stroke="#B5AD9B" stroke-width="4"/>
+      <g stroke="#4A5A52" stroke-width="3" stroke-linecap="round"><line x1="400" y1="72" x2="400" y2="56"/><line x1="400" y1="72" x2="412" y2="78"/></g>
+    </svg>`},
+
+  future:{sky1:"#F0DCC6", sky2:"#E8CDB4", role:"старший друг", shirt:"#37474F", prop:"collar", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <defs><linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F6D9B8"/><stop offset="1" stop-color="#E9B79A"/></linearGradient></defs>
+      <rect width="800" height="300" fill="url(#fsky)"/>
+      <circle cx="620" cy="150" r="54" fill="#F6C98C"/>
+      <g fill="#9E7B7E" opacity=".85">
+        <rect x="40" y="130" width="70" height="170"/><rect x="124" y="90" width="54" height="210"/>
+        <rect x="192" y="158" width="82" height="142"/><rect x="290" y="110" width="60" height="190"/>
+        <rect x="366" y="172" width="90" height="128"/><rect x="470" y="128" width="58" height="172"/>
+        <rect x="544" y="184" width="76" height="116"/><rect x="636" y="144" width="64" height="156"/><rect x="716" y="190" width="70" height="110"/>
+      </g>
+      <g fill="#F7E3C4" opacity=".75">
+        <rect x="54" y="148" width="12" height="16"/><rect x="82" y="148" width="12" height="16"/><rect x="138" y="112" width="12" height="16"/>
+        <rect x="156" y="150" width="12" height="16"/><rect x="306" y="132" width="12" height="16"/><rect x="486" y="150" width="12" height="16"/>
+        <rect x="652" y="166" width="12" height="16"/><rect x="732" y="210" width="12" height="16"/>
+      </g>
+      <g stroke="#8C6A6E" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M170 62 q10 -8 20 0"/><path d="M196 74 q10 -8 20 0"/><path d="M150 86 q10 -8 20 0"/>
+      </g>
+    </svg>`},
+
+  free:{sky1:"#E8E4DA", sky2:"#EFE9DC", role:"друг", shirt:"#7A5C4A", prop:"hoodie", svg:`
+    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+      <rect width="800" height="300" fill="#EDE8DD"/>
+      <rect y="242" width="800" height="58" fill="#D6CCBC"/>
+      <g><rect x="420" y="50" width="330" height="196" rx="6" fill="#B08A5E"/>
+         <rect x="432" y="62" width="306" height="52" fill="#C79C6B"/><rect x="432" y="126" width="306" height="52" fill="#C79C6B"/><rect x="432" y="190" width="306" height="48" fill="#C79C6B"/>
+         <g fill="#5E7F8C"><rect x="444" y="68" width="14" height="42"/><rect x="464" y="68" width="12" height="42"/></g>
+         <g fill="#A8574E"><rect x="484" y="70" width="16" height="40"/><rect x="506" y="70" width="10" height="40"/></g>
+         <g fill="#6E8A62"><rect x="446" y="132" width="12" height="42"/><rect x="464" y="132" width="16" height="42"/></g>
+         <g fill="#8A6E9A"><rect x="492" y="134" width="14" height="40"/><rect x="512" y="134" width="12" height="40"/></g>
+         <g fill="#C8A45E"><rect x="450" y="196" width="16" height="38"/><rect x="472" y="196" width="12" height="38"/></g></g>
+      <g><rect x="120" y="70" width="180" height="130" rx="8" fill="#BFDCEF" stroke="#A98A62" stroke-width="7"/>
+         <ellipse cx="176" cy="112" rx="24" ry="9" fill="#F4F8FA"/></g>
+      <g><rect x="150" y="200" width="120" height="12" rx="5" fill="#A9865E"/>
+         <rect x="186" y="176" width="30" height="24" rx="4" fill="#F3EFE6" stroke="#CFC6B4"/><path d="M216 182 q12 6 0 12" fill="none" stroke="#CFC6B4" stroke-width="3"/></g>
+      <ellipse cx="300" cy="272" rx="190" ry="22" fill="#C4B7A3"/>
+    </svg>`}
+};
+
+const PROPS = {
+  scarf:`<path d="M40 96 q20 14 40 0 l4 14 q-24 14 -48 0 z" fill="#C2766A"/>`,
+  apron:`<path d="M40 130 q0 -34 20 -34 q20 0 20 34 z" fill="#EDE4D2"/>
+         <path d="M50 98 l10 -8 l10 8" fill="none" stroke="#D9CEB8" stroke-width="3"/>`,
+  badge:`<path d="M48 96 l12 16 l12 -16" fill="none" stroke="#D6D0E0" stroke-width="3"/>
+         <rect x="70" y="110" width="18" height="13" rx="3" fill="#F3F1F7" stroke="#CFC8DC" stroke-width="2"/>`,
+  glasses:`<g fill="none" stroke="#37474F" stroke-width="2.4">
+             <circle cx="49" cy="55" r="10"/><circle cx="71" cy="55" r="10"/><path d="M59 55 h2"/>
+             <path d="M39 53 l-9 -3"/><path d="M81 53 l9 -3"/></g>`,
+  headphones:`<path d="M27 56 q0 -32 33 -32 q33 0 33 32" fill="none" stroke="#39474F" stroke-width="6"/>
+              <rect x="19" y="52" width="14" height="24" rx="7" fill="#39474F"/>
+              <rect x="87" y="52" width="14" height="24" rx="7" fill="#39474F"/>`,
+  cap:`<path d="M28 40 q6 -26 32 -26 q26 0 32 26 z" fill="#2E6E8E"/>
+       <rect x="22" y="38" width="76" height="8" rx="4" fill="#26596F"/>`,
+  coat:`<path d="M18 130 q0 -38 42 -38 q42 0 42 38 z" fill="#FBFCFC"/>
+        <path d="M46 96 l14 12 l14 -12" fill="none" stroke="#DCE4E5" stroke-width="3"/>
+        <path d="M44 100 q16 24 32 2" fill="none" stroke="#43535B" stroke-width="2.6"/>
+        <circle cx="78" cy="106" r="5" fill="#9AA7AC"/>`,
+  headset:`<path d="M27 56 q0 -32 33 -32 q33 0 33 32" fill="none" stroke="#4C5A63" stroke-width="5"/>
+           <rect x="20" y="52" width="12" height="20" rx="6" fill="#4C5A63"/>
+           <path d="M92 62 q8 16 -10 20" fill="none" stroke="#4C5A63" stroke-width="3"/>
+           <circle cx="80" cy="84" r="4.5" fill="#4C5A63"/>`,
+  collar:`<path d="M46 96 l14 12 l14 -12" fill="none" stroke="#263238" stroke-width="4"/>`,
+  hoodie:`<path d="M14 130 q2 -40 46 -40 q44 0 46 40 z" fill="#7A5C4A"/>
+          <path d="M30 92 q30 22 60 0 q-6 -16 -30 -16 q-24 0 -30 16" fill="#8C6C58"/>
+          <path d="M52 106 v18" stroke="#6A4F40" stroke-width="3"/><path d="M68 106 v18" stroke="#6A4F40" stroke-width="3"/>`
+};
+
+function charSVG(key){
+  const sc = SCENES[key] || SCENES.free;
+  const shirt = sc.shirt || "#3E7A8C";
+  const prop = PROPS[sc.prop] || "";
+  const coatOrHood = sc.prop === "coat" || sc.prop === "hoodie";
+  return `<svg viewBox="0 0 120 132" xmlns="http://www.w3.org/2000/svg">
+    ${coatOrHood ? "" : `<path d="M18 132 q0 -38 42 -38 q42 0 42 38 z" fill="${shirt}"/>`}
+    ${coatOrHood ? prop : ""}
+    <rect x="52" y="74" width="16" height="22" fill="#E3AC85"/>
+    <ellipse cx="60" cy="52" rx="30" ry="33" fill="#F2C49E"/>
+    <circle cx="30" cy="55" r="5.5" fill="#EBB68E"/><circle cx="90" cy="55" r="5.5" fill="#EBB68E"/>
+    <path d="M29 44 q4 -30 31 -30 q27 0 31 30 q-11 -13 -31 -13 q-20 0 -31 13 z" fill="#4A3A2E"/>
+    <g stroke="#4A3A2E" stroke-width="2.6" fill="none" stroke-linecap="round">
+      <path d="M42 43 q7 -4 14 -1"/><path d="M64 42 q7 -3 14 1"/>
+    </g>
+    <circle cx="49" cy="54" r="3.6" fill="#2A3A44"/><circle cx="71" cy="54" r="3.6" fill="#2A3A44"/>
+    <circle cx="50.2" cy="52.8" r="1.1" fill="#fff"/><circle cx="72.2" cy="52.8" r="1.1" fill="#fff"/>
+    <rect class="lid" x="43" y="47" width="12" height="9" fill="#F2C49E"/>
+    <rect class="lid" x="65" y="47" width="12" height="9" fill="#F2C49E"/>
+    <path d="M60 55 q4 8 -2 10" fill="none" stroke="#D79B74" stroke-width="2" stroke-linecap="round"/>
+    <ellipse class="mouth" cx="60" cy="71" rx="8" ry="5" fill="#AE514A"/>
+    <path d="M44 66 q16 14 32 0" fill="none" stroke="#D79B74" stroke-width="1.6" opacity=".7"/>
+    ${coatOrHood ? "" : prop}
+  </svg>`;
+}
+
+const ROLE_PREFIX = "Алекс · ";
 
 const LEVELS = {
   A1:{note:"Говорит очень просто и медленно.", rate:0.74},
@@ -785,7 +1087,7 @@ const state = {
   level:"A2",
   step:0, nudged:false, done:false, name:"",
   history:[], mistakes:[],
-  voiceOn:true, handsFree:false, rate:LEVELS.A2.rate,
+  voiceOn:true, handsFree:false, rate:LEVELS.A2.rate, voiceName:"",
   started:false, busy:false, listening:false
 };
 const $ = id => document.getElementById(id);
@@ -1009,17 +1311,31 @@ function lockInput(locked){
    ============================================================ */
 let voices = [], chosenVoice = null, voiceUnlocked = false;
 
+/* Чем «живее» голос, тем выше оценка. Роботные системные голоса уходят в минус. */
+function scoreVoice(v){
+  const n = v.name || "", l = v.lang || "";
+  let sc = 0;
+  if(/enhanced|premium|siri|neural|natural/i.test(n)) sc += 7;
+  if(/^(ava|zoe|allison|susan|joelle|evan|nathan|samantha|serena|nicky|aaron|isha|oliver)/i.test(n)) sc += 3;
+  if(/google (us|uk) english/i.test(n)) sc += 5;
+  if(/microsoft (aria|jenny|guy|michelle|ana|christopher)/i.test(n)) sc += 5;
+  if(/^en[-_]US/i.test(l)) sc += 2;
+  if(/^en[-_](GB|AU|CA|IE)/i.test(l)) sc += 1;
+  if(/compact|eloquence|fred|albert|whisper|zarvox|trinoids|bells|bahh|boing|bubbles|cellos|jester|organ|superstar|wobble|grandma|grandpa|rocko|shelley|sandy|flo/i.test(n)) sc -= 9;
+  return sc;
+}
+
+function englishVoices(){
+  return voices.filter(v => /^en[-_]/i.test(v.lang || ""))
+               .sort((a,b) => scoreVoice(b) - scoreVoice(a));
+}
+
 function loadVoices(){
   if(!window.speechSynthesis) return;
   voices = speechSynthesis.getVoices() || [];
-  const en = voices.filter(v => /^en[-_]/i.test(v.lang));
-  const liked = ["Samantha","Aaron","Nicky","Karen","Daniel","Serena","Google US English","Microsoft Aria","Microsoft Guy","Alex"];
-  chosenVoice = null;
-  for(const name of liked){
-    const hit = en.find(v => v.name.indexOf(name) === 0 || v.name.includes(name));
-    if(hit){ chosenVoice = hit; break; }
-  }
-  if(!chosenVoice) chosenVoice = en.find(v => /en[-_]US/i.test(v.lang)) || en[0] || null;
+  const en = englishVoices();
+  chosenVoice = (state.voiceName && en.find(v => v.name === state.voiceName)) || en[0] || null;
+  fillVoiceList();
 }
 if(window.speechSynthesis){
   loadVoices();
@@ -1027,8 +1343,23 @@ if(window.speechSynthesis){
   speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-/* iOS проигрывает речь только после касания экрана: первое касание
-   «открывает» синтезатор пустой фразой и подгружает список голосов. */
+function fillVoiceList(){
+  const sel = $("voiceSel");
+  if(!sel) return;
+  const en = englishVoices();
+  if(!en.length){ sel.innerHTML = '<option value="">голоса ещё не загрузились — коснитесь экрана</option>'; return; }
+  sel.innerHTML = "";
+  en.forEach(v => {
+    const o = document.createElement("option");
+    o.value = v.name;
+    o.textContent = v.name + " · " + v.lang + (scoreVoice(v) >= 6 ? " ★" : "");
+    if(chosenVoice && v.name === chosenVoice.name) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+/* iOS проигрывает речь только после касания: первое касание «открывает»
+   синтезатор пустой фразой и подгружает список голосов. */
 function unlockVoice(){
   if(voiceUnlocked || !window.speechSynthesis) return;
   try{
@@ -1042,28 +1373,60 @@ function unlockVoice(){
 document.addEventListener("touchend", unlockVoice, {once:true, passive:true});
 document.addEventListener("mousedown", unlockVoice, {once:true});
 
+function setTalking(on){
+  $("char").classList.toggle("talking", !!on);
+}
+
 function stopSpeaking(){
   if(window.speechSynthesis) speechSynthesis.cancel();
+  setTalking(false);
+}
+
+/* Живая речь: фраза дробится на смысловые куски, у каждого свой темп,
+   высота и пауза после него — так исчезает «диктор автоответчика». */
+function clauses(text){
+  const raw = [];
+  let buf = "";
+  for(const ch of String(text).replace(/\s+/g," ")){
+    buf += ch;
+    if(/[.!?,;:—]/.test(ch)){ raw.push(buf.trim()); buf = ""; }
+  }
+  if(buf.trim()) raw.push(buf.trim());
+  const out = [];
+  for(const c of raw){
+    const short = c.split(" ").length < 3;
+    if(out.length && (short || out[out.length-1].split(" ").length < 3)) out[out.length-1] += " " + c;
+    else out.push(c);
+  }
+  return out.length ? out : [String(text)];
 }
 
 function speak(text, done){
   if(!window.speechSynthesis || !state.voiceOn){ if(done) done(); return; }
-  const say = () => {
+  const parts = clauses(String(text).replace(/[*_#]/g,""));
+  const run = () => {
     speechSynthesis.cancel();
-    speechSynthesis.resume();               // iOS иногда оставляет очередь на паузе
+    speechSynthesis.resume();
     if(!chosenVoice) loadVoices();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/[*_#]/g,""));
-    u.lang = chosenVoice ? chosenVoice.lang : "en-US";
-    if(chosenVoice) u.voice = chosenVoice;
-    u.rate = state.rate;
-    u.pitch = 1;
-    u.onend = () => { if(done) done(); };
-    u.onerror = () => { if(done) done(); };
-    speechSynthesis.speak(u);
+    setTalking(true);
+    let i = 0;
+    const next = () => {
+      if(i >= parts.length){ setTalking(false); if(done) done(); return; }
+      const part = parts[i++];
+      const u = new SpeechSynthesisUtterance(part);
+      if(chosenVoice){ u.voice = chosenVoice; u.lang = chosenVoice.lang; } else u.lang = "en-US";
+      const ask = /\?$/.test(part), excl = /!$/.test(part), longer = part.split(" ").length > 9;
+      u.rate  = state.rate * (ask ? 0.97 : 1) * (longer ? 1.02 : 1) * (0.98 + Math.random()*0.04);
+      u.pitch = (ask ? 1.09 : excl ? 1.05 : 1.0) + (Math.random()*0.06 - 0.03);
+      u.volume = 1;
+      u.onend = () => setTimeout(next, /[.!?]$/.test(part) ? 250 : 120);
+      u.onerror = () => setTimeout(next, 60);
+      speechSynthesis.speak(u);
+    };
+    next();
   };
-  // после диктовки iOS освобождает аудио с задержкой
-  if(IOS && justListened){ justListened = false; setTimeout(say, 300); }
-  else say();
+  if(IOS && justListened){ justListened = false; setTimeout(run, 300); }
+  else run();
 }
 
 /* ============================================================
@@ -1086,6 +1449,8 @@ function startListening(){
   recognition.onstart = () => {
     state.listening = true;
     $("micBtn").classList.add("on");
+    $("char").classList.add("listening");
+    $("earcue").hidden = false;
     setStatus("Слушаю… говорите по-английски", true);
   };
   recognition.onresult = e => {
@@ -1110,6 +1475,8 @@ function startListening(){
   recognition.onend = () => {
     state.listening = false;
     $("micBtn").classList.remove("on");
+    $("char").classList.remove("listening");
+    $("earcue").hidden = true;
     recognition = null;
     justListened = true;
     const said = final.trim();
@@ -1118,7 +1485,12 @@ function startListening(){
   };
 
   try{ recognition.start(); }
-  catch{ state.listening = false; $("micBtn").classList.remove("on"); }
+  catch{
+    state.listening = false;
+    $("micBtn").classList.remove("on");
+    $("char").classList.remove("listening");
+    $("earcue").hidden = true;
+  }
 }
 
 function toggleMic(){
@@ -1148,7 +1520,7 @@ const store = {
 async function saveSettings(){
   await store.set("practice:settings", JSON.stringify({
     engine:state.engine, level:state.level, topic:state.topic.key,
-    voiceOn:state.voiceOn, handsFree:state.handsFree, rate:state.rate,
+    voiceOn:state.voiceOn, handsFree:state.handsFree, rate:state.rate, voiceName:state.voiceName,
     mistakes:state.mistakes.slice(-40),
     proxyUrl:conn.proxyUrl, apiKey:conn.apiKey
   }));
@@ -1164,6 +1536,7 @@ async function loadSettings(){
     if(typeof s.voiceOn === "boolean") state.voiceOn = s.voiceOn;
     if(typeof s.handsFree === "boolean") state.handsFree = s.handsFree;
     if(typeof s.rate === "number") state.rate = s.rate;
+    if(typeof s.voiceName === "string") state.voiceName = s.voiceName;
     if(Array.isArray(s.mistakes)) state.mistakes = s.mistakes;
     conn.proxyUrl = s.proxyUrl || "";
     conn.apiKey = s.apiKey || "";
@@ -1172,6 +1545,7 @@ async function loadSettings(){
   $("apiKey").value = conn.apiKey;
   paintControls();
   renderMistakes();
+  loadVoices();
 }
 
 /* ============================================================
@@ -1209,6 +1583,18 @@ function chooseTopic(t){
   resetConversation();
 }
 
+function paintScene(){
+  const key = SCENES[state.topic.key] ? state.topic.key : "free";
+  const sc = SCENES[key];
+  $("scene").innerHTML = sc.svg;
+  $("char").innerHTML = charSVG(key);
+  $("role").textContent = ROLE_PREFIX + sc.role;
+  document.querySelector(".app").style.setProperty("--sky1", sc.sky1);
+  document.querySelector(".app").style.setProperty("--sky2", sc.sky2);
+  $("stage").style.setProperty("--sky1", sc.sky1);
+  $("stage").style.setProperty("--sky2", sc.sky2);
+}
+
 function paintControls(){
   document.querySelectorAll("[data-topic]").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.topic === state.topic.key)));
@@ -1225,6 +1611,7 @@ function paintControls(){
   $("voiceBtn").textContent = state.voiceOn ? "🔊 Озвучка" : "🔇 Без звука";
   $("handsFree").checked = state.handsFree;
   $("rate").value = state.rate;
+  paintScene();
 }
 
 function openPanel(id, open){
@@ -1278,7 +1665,20 @@ $("handsFree").onchange = e => {
 $("rate").oninput = e => { state.rate = parseFloat(e.target.value); saveSettings(); };
 $("restartBtn").onclick = resetConversation;
 
-$("settingsToggle").onclick = () => openPanel("settings", $("settings").hidden);
+$("voiceSel").onchange = e => {
+  state.voiceName = e.target.value;
+  const en = englishVoices();
+  chosenVoice = en.find(v => v.name === state.voiceName) || chosenVoice;
+  saveSettings();
+};
+$("voiceTest").onclick = () => {
+  unlockVoice();
+  state.voiceOn = true;
+  paintControls();
+  speak("Hey, I'm Alex. Nice to meet you — shall we talk?");
+};
+
+$("settingsToggle").onclick = () => { fillVoiceList(); openPanel("settings", $("settings").hidden); };
 $("mistakeToggle").onclick = () => openPanel("mistakes", $("mistakes").hidden);
 $("settingsClose").onclick = () => openPanel("settings", false);
 $("settingsSave").onclick = async () => {
