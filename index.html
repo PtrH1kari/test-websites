@@ -1,1704 +1,1186 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="English">
-<meta name="theme-color" content="#12655A">
-<title>Разговорный английский — практика с Алексом</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>English Practice — говорим по-английски</title>
 <style>
-  :root{
-    --ink:#17242B;
-    --ink-soft:#5C6E73;
-    --page:#E8EDE7;
-    --card:#FFFFFF;
-    --line:#D3DBD2;
-    --teal:#12655A;
-    --teal-deep:#0C4A42;
-    --teal-soft:#DCEAE5;
-    --amber:#9A6412;
-    --amber-soft:#FAEED6;
-    --radius:14px;
-    --serif:Georgia,"Iowan Old Style","Palatino Linotype",serif;
-    --sans:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html{height:100%}
-  body{
-    height:100%;
-    background:var(--page);
-    color:var(--ink);
-    font-family:var(--sans);
-    display:flex;justify-content:center;
-    overscroll-behavior:none;
-  }
-  button{touch-action:manipulation}
-  .app{
-    width:100%;max-width:760px;
-    background:var(--card);
-    height:100vh;height:100dvh;
-    display:flex;flex-direction:column;
-    border-left:1px solid var(--line);
-    border-right:1px solid var(--line);
-    overflow:hidden;
-  }
+/* ============================================================
+   ТОКЕНЫ
+   Палитра: холодная «бумага» + индиго-чернила, фиалковый тьютор,
+   персиковый ученик, мятный «верно», янтарный микрофон.
+   Шрифты: округлый сан-сериф для русского интерфейса,
+   серифный — только для английских фраз (язык видно глазами).
+   ============================================================ */
+:root{
+  --paper:#F2F4FF;
+  --card:#FFFFFF;
+  --ink:#1B1F3B;
+  --ink-soft:#5B618A;
+  --violet:#5B4BE0;
+  --violet-soft:#EDEBFF;
+  --peach:#FF8A5B;
+  --peach-soft:#FFEFE7;
+  --mint:#0FA678;
+  --mint-soft:#E2F7F0;
+  --amber:#FFC94A;
+  --red:#D6455B;
+  --red-soft:#FDEAED;
+  --line:#DEE2F6;
+  --radius:18px;
+  --ui:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI Variable",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --en:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--ui);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-text-size-adjust:100%;
+  min-height:100dvh;
+}
+.app{
+  max-width:560px;
+  margin:0 auto;
+  padding:14px 14px calc(18px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
 
-  /* ---------- header ---------- */
-  header{
-    padding:calc(14px + env(safe-area-inset-top)) 20px 12px;
-    border-bottom:1px solid var(--line);
-    flex:0 0 auto;
-  }
-  .titlerow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  h1{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:-.01em}
-  .hbtns{display:flex;gap:7px}
-  .hbtn{
-    font:inherit;font-size:13px;
-    background:none;border:1px solid var(--line);color:var(--ink-soft);
-    padding:6px 11px;border-radius:99px;cursor:pointer;
-  }
-  .hbtn:active{background:var(--page)}
-  .hbtn b{color:var(--amber)}
-  .partner{margin-top:11px;display:flex;align-items:center;gap:11px}
-  .avatar{
-    width:38px;height:38px;flex:0 0 38px;border-radius:50%;
-    background:var(--teal);color:#fff;font-family:var(--serif);font-size:18px;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .partner-text{font-size:13px;line-height:1.4;color:var(--ink-soft)}
-  .partner-text b{color:var(--ink);font-weight:600}
+/* ---------- шапка ---------- */
+header.top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 4px 0}
+header.top h1{
+  font-family:var(--en);
+  font-size:30px;line-height:1;margin:0;letter-spacing:-.01em;
+}
+header.top p{margin:0;color:var(--ink-soft);font-size:14px}
 
-  /* ---------- panels ---------- */
-  .panel{
-    flex:0 0 auto;
-    border-bottom:1px solid var(--line);
-    padding:16px 20px;
-    font-size:14px;line-height:1.5;
-    max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-  .panel[hidden]{display:none}
-  .panel h2{font-family:var(--serif);font-size:16px;font-weight:400;margin-bottom:8px}
-  .panel p{color:var(--ink-soft);max-width:62ch;margin-bottom:10px}
-  #mistakes{background:var(--page)}
-  #mistakes ol{margin-left:18px;line-height:1.55}
-  #mistakes li{margin-bottom:8px}
-  #mistakes .was{text-decoration:line-through;color:var(--ink-soft)}
-  #mistakes .none{color:var(--ink-soft)}
-  #settings{background:var(--amber-soft)}
-  #settings label.field{display:block;margin-bottom:10px}
-  #settings label.field span{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:4px}
-  #settings input[type=url],#settings input[type=password]{
-    width:100%;font:inherit;font-size:16px;padding:9px 12px;
-    border:1px solid #DCC79B;border-radius:8px;background:var(--card);color:var(--ink);
-  }
-  #settings .modes{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-  #settings .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-  .save{font:inherit;font-size:14px;background:var(--teal);color:#fff;border:none;border-radius:99px;padding:9px 18px;cursor:pointer}
-  .close{font:inherit;font-size:14px;background:none;border:1px solid #DCC79B;border-radius:99px;padding:8px 15px;cursor:pointer;color:var(--ink)}
-  .said{font-size:13px;color:var(--amber)}
+/* ---------- статус ---------- */
+.status{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:6px 11px;font-size:13px;color:var(--ink-soft);
+}
+.pill b{color:var(--ink);font-weight:600}
+.pill.on{background:var(--mint-soft);border-color:#B9E8DA;color:#0A6B4E}
+.pill.off{background:#F1F2F7}
+.pill.warn{background:var(--red-soft);border-color:#F5C6CE;color:#98303F}
+.pill.live{background:var(--violet-soft);border-color:#CFC9FF;color:#3A2CB8}
 
-  /* ---------- setup strip ---------- */
-  .setup{flex:0 0 auto;border-bottom:1px solid var(--line);padding:11px 20px;display:flex;flex-direction:column;gap:9px}
-  .setup-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-  .setup-label{font-size:12.5px;color:var(--ink-soft)}
-  .chip{
-    font:inherit;font-size:13.5px;
-    background:var(--page);border:1px solid transparent;color:var(--ink);
-    padding:7px 13px;border-radius:99px;cursor:pointer;white-space:nowrap;
-  }
-  .chip[aria-pressed="true"]{background:var(--teal);color:#fff}
-  #customTopic{
-    font:inherit;font-size:16px;padding:6px 12px;border-radius:99px;
-    border:1px solid var(--line);background:var(--card);color:var(--ink);width:150px;
-  }
+/* ---------- панели ---------- */
+details.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;
+}
+details.panel > summary{
+  cursor:pointer;padding:12px 14px;font-weight:600;font-size:15px;
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+details.panel > summary::-webkit-details-marker{display:none}
+details.panel > summary::after{content:"▾";color:var(--ink-soft);font-size:13px}
+details.panel[open] > summary::after{content:"▴"}
+.panel-body{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+.panel-body p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.5}
 
-  /* ---------- сцена и персонаж ---------- */
-  .stage{
-    flex:0 0 auto;position:relative;
-    height:150px;overflow:hidden;
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, var(--sky1,#DDE9F2), var(--sky2,#EFE7D8));
-  }
-  .stage svg.scene{position:absolute;inset:0;width:100%;height:100%}
-  .char{
-    position:absolute;left:16px;bottom:0;width:120px;height:130px;
-    transform-origin:bottom center;
-  }
-  .char svg{width:100%;height:100%;overflow:visible}
-  .char .mouth{transform-box:fill-box;transform-origin:center;transform:scaleY(.5)}
-  .char.talking .mouth{animation:talk .32s ease-in-out infinite alternate}
-  @keyframes talk{from{transform:scaleY(.35)}to{transform:scaleY(1.2)}}
-  .char .lid{transform-box:fill-box;transform-origin:top;transform:scaleY(0);animation:blink 6s infinite}
-  @keyframes blink{0%,94%{transform:scaleY(0)}96%{transform:scaleY(1)}98%{transform:scaleY(0)}}
-  .char.listening{animation:lean 2.2s ease-in-out infinite}
-  @keyframes lean{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg)}}
-  .role{
-    position:absolute;right:12px;top:10px;
-    font-size:12px;color:var(--ink);
-    background:rgba(255,255,255,.82);
-    border-radius:99px;padding:4px 11px;
-  }
-  .earcue{
-    position:absolute;left:120px;bottom:78px;
-    font-size:12px;color:var(--teal);
-    background:rgba(255,255,255,.9);border-radius:99px;padding:4px 10px;
-  }
-  .earcue[hidden]{display:none}
+label.field{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--ink-soft)}
+input[type=password],input[type=text],select,textarea{
+  font:inherit;font-size:17px;color:var(--ink);
+  background:#FBFBFF;border:1px solid var(--line);border-radius:12px;padding:11px 12px;
+  width:100%;
+}
+select{appearance:none;background-image:none}
+textarea{resize:none;line-height:1.4}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{
+  outline:3px solid #B7AEFF;outline-offset:2px;
+}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row > *{flex:1 1 auto}
+.check{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--ink)}
+.check input{width:20px;height:20px;accent-color:var(--violet);flex:none}
 
-  /* ---------- transcript ---------- */
-  .transcript{
-    flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
-    padding:20px 20px 8px;display:flex;flex-direction:column;gap:18px;
-    background:linear-gradient(180deg, var(--sky1,#DDE9F2), #fff 62%);
-    background:linear-gradient(180deg, color-mix(in srgb, var(--sky1,#DDE9F2) 50%, #fff), #fff 68%);
-  }
-  .bubble{
-    font-family:var(--serif);font-size:17px;line-height:1.45;
-    max-width:86%;padding:14px 18px;position:relative;
-    background:#fff;border-radius:26px;
-    box-shadow:0 2px 10px rgba(23,36,43,.10);
-  }
-  .bubble .who{
-    display:block;font-family:var(--sans);font-size:11.5px;
-    color:var(--ink-soft);margin-bottom:4px;
-  }
-  /* «хвост» облачка — два кружка в сторону говорящего */
-  .bubble::before,.bubble::after{content:"";position:absolute;background:inherit;border-radius:50%}
-  .bubble.alex{align-self:flex-start;margin-left:14px}
-  .bubble.alex::before{width:14px;height:14px;left:-7px;bottom:14px;box-shadow:0 2px 6px rgba(23,36,43,.08)}
-  .bubble.alex::after{width:7px;height:7px;left:-15px;bottom:5px}
-  .bubble.me{
-    align-self:flex-end;margin-right:14px;
-    background:var(--teal-soft);
-  }
-  .bubble.me::before{width:14px;height:14px;right:-7px;bottom:14px}
-  .bubble.me::after{width:7px;height:7px;right:-15px;bottom:5px}
-  .fix{
-    align-self:flex-end;max-width:86%;background:var(--amber-soft);
-    border-radius:20px;margin-right:14px;
-    padding:12px 16px;font-size:14.5px;line-height:1.5;
-    box-shadow:0 2px 8px rgba(154,100,18,.10);
-  }
-  .fix .fix-head{font-size:11.5px;color:var(--amber);margin-bottom:6px}
-  .fix .was{font-family:var(--serif);text-decoration:line-through;color:var(--ink-soft)}
-  .fix .better{font-family:var(--serif);font-size:16.5px;display:block;margin:3px 0 5px}
-  .fix .why{color:var(--ink-soft)}
-  .fix .say{color:var(--amber)}
-  .praise{
-    align-self:flex-end;font-size:13px;color:var(--teal);
-    background:var(--teal-soft);border-radius:99px;padding:5px 13px;
-  }
-  .empty{
-    margin:auto;text-align:center;max-width:330px;
-    color:var(--ink-soft);font-size:14.5px;line-height:1.6;padding:20px 0;
-  }
-  .empty b{color:var(--ink)}
-  .start-btn{
-    font:inherit;font-size:16px;margin-top:16px;
-    background:var(--teal);color:#fff;border:none;border-radius:99px;
-    padding:13px 26px;cursor:pointer;
-  }
-  .failed{
-    align-self:flex-start;max-width:88%;font-size:14px;line-height:1.5;
-    background:#FBE9E7;border-radius:var(--radius);padding:11px 14px;
-  }
-  .failed button{
-    font:inherit;font-size:14px;margin:6px 6px 0 0;background:none;
-    border:1px solid rgba(0,0,0,.2);border-radius:99px;padding:5px 12px;cursor:pointer;color:var(--ink);
-  }
+/* ---------- кнопки ---------- */
+button{
+  font:inherit;font-weight:600;cursor:pointer;border-radius:12px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  padding:10px 13px;min-height:44px;
+}
+button:active{transform:translateY(1px)}
+button[disabled]{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--violet);border-color:var(--violet);color:#fff}
+.btn-ghost{background:transparent}
+.btn-quiet{background:#F1F2F7;border-color:transparent;color:var(--ink-soft);font-weight:500}
+.btn-danger{background:var(--red-soft);border-color:#F5C6CE;color:#98303F}
+.icon-btn{min-height:38px;padding:6px 10px;font-size:15px}
 
-  /* ---------- composer ---------- */
-  .composer{
-    flex:0 0 auto;border-top:1px solid var(--line);background:var(--card);
-    padding:11px 20px calc(14px + env(safe-area-inset-bottom));
-  }
-  .suggestions{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;margin-bottom:9px}
-  .suggestions:empty{display:none}
-  .sug{
-    font:inherit;font-family:var(--serif);font-size:14px;white-space:nowrap;
-    background:var(--card);border:1px solid var(--line);border-radius:99px;
-    padding:7px 13px;cursor:pointer;color:var(--ink);
-  }
-  .sug:active{background:var(--teal-soft)}
-  .status{font-size:13px;color:var(--ink-soft);min-height:18px;margin-bottom:8px}
-  .status.live{color:var(--teal)}
-  .inputrow{display:flex;align-items:center;gap:10px}
-  .mic{
-    width:60px;height:60px;flex:0 0 60px;border-radius:50%;border:none;cursor:pointer;
-    background:var(--teal);color:#fff;font-size:23px;
-    display:flex;align-items:center;justify-content:center;position:relative;
-  }
-  .mic:disabled{background:#B6C2BE}
-  .mic.on{background:#B23A2E}
-  .mic.on::after{
-    content:"";position:absolute;inset:-8px;border-radius:50%;
-    border:2px solid #B23A2E;animation:ring 1.4s ease-out infinite;
-  }
-  @keyframes ring{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.25);opacity:0}}
-  .textwrap{flex:1 1 auto;display:flex;gap:7px;min-width:0}
-  #typed{
-    flex:1 1 auto;min-width:0;font:inherit;font-size:16px;
-    padding:12px 14px;border:1px solid var(--line);border-radius:99px;
-    background:var(--card);color:var(--ink);
-  }
-  #sendBtn{
-    font:inherit;font-size:14px;border:1px solid var(--line);background:var(--page);
-    border-radius:99px;padding:0 15px;cursor:pointer;color:var(--ink);
-  }
-  .options{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--ink-soft)}
-  .options label{display:flex;align-items:center;gap:5px;cursor:pointer}
-  .options input[type=range]{width:88px;accent-color:var(--teal)}
-  .options input[type=checkbox]{accent-color:var(--teal);width:17px;height:17px}
-  .tgl{
-    font:inherit;font-size:13px;background:none;border:1px solid var(--line);
-    border-radius:99px;padding:5px 11px;cursor:pointer;color:var(--ink-soft);
-  }
-  .tgl[aria-pressed="true"]{border-color:var(--teal);color:var(--teal)}
+/* ---------- чат ---------- */
+.chat{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;display:flex;flex-direction:column;gap:12px;
+  min-height:46dvh;max-height:58dvh;overflow-y:auto;overscroll-behavior:contain;
+}
+.msg{display:flex;flex-direction:column;gap:5px;max-width:92%}
+.msg .who{font-size:12px;color:var(--ink-soft)}
+.bubble{padding:11px 13px;border-radius:16px;line-height:1.45}
+.msg.tutor{align-self:flex-start}
+.msg.tutor .bubble{
+  background:var(--violet-soft);border-bottom-left-radius:6px;
+  font-family:var(--en);font-size:19px;color:#221C58;
+}
+.msg.learner{align-self:flex-end;align-items:flex-end}
+.msg.learner .bubble{
+  background:var(--peach-soft);border-bottom-right-radius:6px;
+  font-family:var(--en);font-size:17px;
+}
+.msg.system{align-self:center;max-width:100%}
+.msg.system .bubble{background:#F1F2F7;color:var(--ink-soft);font-size:13px;text-align:center}
+.msg.system.bad .bubble{background:var(--red-soft);color:#98303F}
+.bubble-row{display:flex;align-items:flex-start;gap:7px}
+.bubble-row .icon-btn{flex:none;background:#fff9;border-color:transparent}
 
-  @media (max-width:600px){
-    header,.setup,.transcript,.composer,.panel{padding-left:14px;padding-right:14px}
-    .bubble,.fix{max-width:100%}
-    .setup-line{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
-    .partner{display:none}
-    .stage{height:126px}
-    .char{width:100px;height:108px;left:10px}
-    .earcue{left:104px;bottom:64px}
-    .bubble{font-size:16px;max-width:92%}
-  }
-  @media (prefers-reduced-motion:reduce){.mic.on::after{animation:none;opacity:.5}}
-  :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+/* карточка обратной связи */
+.feedback{
+  align-self:stretch;max-width:100%;
+  border-left:4px solid var(--mint);background:var(--mint-soft);
+  border-radius:12px;padding:11px 13px;display:flex;flex-direction:column;gap:7px;
+}
+.feedback.fix{border-left-color:var(--amber);background:#FFF7E3}
+.feedback .head{font-weight:700;font-size:15px}
+.feedback .orig{font-family:var(--en);font-size:15px;color:var(--ink-soft);text-decoration:line-through}
+.feedback .good{font-family:var(--en);font-size:18px;font-weight:600}
+.feedback .why{font-size:14px;line-height:1.45}
+.feedback .tip{font-size:13px;color:var(--ink-soft);line-height:1.45}
+.feedback .acts{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px}
+
+/* печатает… */
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--violet);opacity:.4;animation:blink 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}
+.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+/* ---------- подсказки ---------- */
+.hints{display:flex;flex-direction:column;gap:7px}
+.hints .cap{font-size:13px;color:var(--ink-soft);padding-left:4px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 4px 6px;scrollbar-width:thin}
+.chip{
+  flex:none;display:flex;align-items:stretch;gap:0;
+  border:1px solid #CFC9FF;border-radius:999px;background:#fff;overflow:hidden;
+}
+.chip button{border:none;border-radius:0;background:transparent;min-height:40px}
+.chip .txt{font-family:var(--en);font-size:16px;font-weight:500;white-space:nowrap;padding:8px 12px}
+.chip .say{padding:8px 11px;border-left:1px solid #EDEBFF;font-size:14px}
+
+/* ---------- ввод ---------- */
+.composer{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:12px;display:flex;flex-direction:column;gap:10px;
+  position:sticky;bottom:0;box-shadow:0 -6px 20px rgba(27,31,59,.06);
+}
+.mic{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;min-height:60px;font-size:18px;
+  background:var(--amber);border-color:#E9B434;color:#3A2A00;
+}
+.mic.rec{background:var(--red);border-color:var(--red);color:#fff}
+.mic.rec .dot{width:12px;height:12px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(.8);opacity:.7}50%{transform:scale(1.25);opacity:1}}
+.send-row{display:flex;gap:8px;align-items:flex-end}
+.send-row textarea{flex:1 1 auto}
+.counter{font-size:12px;color:var(--ink-soft);text-align:right}
+.tutor-controls{display:flex;gap:8px;flex-wrap:wrap}
+.tutor-controls button{flex:1 1 auto;font-size:14px}
+
+/* ---------- диагностика / приватность ---------- */
+.diag{display:flex;flex-direction:column;gap:7px;font-size:14px}
+.diag div{display:flex;gap:8px;align-items:flex-start}
+.diag .mark{flex:none;width:20px;text-align:center}
+.note{font-size:13px;color:var(--ink-soft);line-height:1.55}
+.note ul{margin:6px 0 0;padding-left:20px}
+.note li{margin-bottom:4px}
+footer{text-align:center;font-size:12px;color:var(--ink-soft);padding:4px 0 10px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <header>
-    <div class="titlerow">
-      <h1>Разговорный английский</h1>
-      <div class="hbtns">
-        <button class="hbtn" id="settingsToggle" aria-expanded="false">Настройки</button>
-        <button class="hbtn" id="mistakeToggle" aria-expanded="false">Ошибки: <b id="mistakeCount">0</b></button>
-      </div>
-    </div>
-    <div class="partner">
-      <div class="partner-text">
-        <b>Алекс</b> — собеседник из Чикаго.
-        <span id="partnerNote">Говорит просто и медленно, поправляет по-дружески.</span>
-      </div>
-    </div>
+  <header class="top">
+    <h1>English Practice</h1>
+    <p>Говорим по-английски вслух — спокойно и без оценок</p>
   </header>
 
-  <section class="panel" id="settings" hidden>
-    <h2>Настройки</h2>
-    <div class="modes">
-      <button class="chip" data-engine="local" aria-pressed="true">Без интернета</button>
-      <button class="chip" data-engine="api" aria-pressed="false">Через ИИ</button>
-    </div>
-    <p id="engineNote">Алекс ведёт разговор по сценариям: 10 тем, вопросы по очереди, реакции на ваши слова и проверка типичных ошибок. Работает без сети и без ключей — годится для урока и для метро.</p>
-    <div id="apiFields" hidden>
-      <label class="field">
-        <span>Адрес прокси (разверните worker.js — ключ остаётся на сервере)</span>
-        <input id="proxyUrl" type="url" placeholder="https://ваш-воркер.workers.dev" autocomplete="off">
+  <!-- СТАТУС -->
+  <div class="status" id="statusBar">
+    <span class="pill off" id="pillMode">Режим: <b>демо</b></span>
+    <span class="pill off" id="pillMic">Микрофон: <b>проверяю…</b></span>
+    <span class="pill on" id="pillSound">Звук: <b>включён</b></span>
+  </div>
+
+  <!-- НАСТРОЙКИ -->
+  <details class="panel" id="settingsPanel">
+    <summary>Настройки и Gemini API</summary>
+    <div class="panel-body">
+      <label class="field" for="apiKey">Gemini API key (необязательно)
+        <input type="password" id="apiKey" autocomplete="off" spellcheck="false" placeholder="AIza…" aria-describedby="keyNote">
       </label>
-      <label class="field">
-        <span>Или личный ключ API — только для своей проверки</span>
-        <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off">
+      <div class="row">
+        <button type="button" id="saveKey" class="btn-primary" aria-label="Подключить Gemini с введённым ключом">Подключить</button>
+        <button type="button" id="rememberKey" class="btn-quiet" aria-label="Сохранить ключ в этом браузере">Запомнить в браузере</button>
+        <button type="button" id="forgetKey" class="btn-danger" aria-label="Удалить сохранённый ключ из браузера">Удалить ключ</button>
+      </div>
+      <p id="keyNote">Без ключа приложение работает в демо-режиме: голос, подсказки, озвучка и проверка частых ошибок доступны. «Запомнить» кладёт ключ в localStorage — так можно делать только для личного локального теста. В публично опубликованной странице ключ виден любому: там нужен backend-прокси.</p>
+
+      <label class="field" for="topic">Тема разговора
+        <select id="topic" aria-label="Выбрать тему разговора"></select>
+      </label>
+
+      <label class="field" for="rate">Скорость речи тьютора
+        <select id="rate" aria-label="Скорость речи тьютора">
+          <option value="0.72">Медленно</option>
+          <option value="0.85" selected>Обычно</option>
+        </select>
+      </label>
+
+      <label class="check" for="autoMic">
+        <input type="checkbox" id="autoMic">
+        Авто-микрофон: включать запись сразу после реплики тьютора
       </label>
     </div>
-    <label class="field">
-      <span>Голос Алекса — выберите самый живой из доступных на устройстве</span>
-      <select id="voiceSel" style="width:100%;font:inherit;font-size:16px;padding:9px 10px;border:1px solid #DCC79B;border-radius:8px;background:#fff;color:var(--ink)"></select>
-    </label>
-    <p style="font-size:13px">На iPhone красивые голоса ставятся отдельно: «Настройки» → «Универсальный доступ» → «Контент с озвучиванием» → «Голоса» → English. Скачайте Ava, Zoe или Siri-голос и вернитесь сюда — он появится в списке.</p>
-    <div class="row">
-      <button class="close" id="voiceTest">Проверить голос</button>
-      <button class="save" id="settingsSave">Сохранить</button>
-      <button class="close" id="settingsClose">Закрыть</button>
-      <span class="said" id="settingsSaid"></span>
+  </details>
+
+  <!-- ЧАТ -->
+  <main class="chat" id="chat" role="log" aria-live="polite" aria-label="Диалог с тьютором"></main>
+
+  <!-- ПОДСКАЗКИ -->
+  <section class="hints" aria-label="Варианты ответа">
+    <div class="cap" id="hintsCap">Можно ответить так — нажми, текст подставится в поле</div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <!-- ВВОД -->
+  <section class="composer" aria-label="Ответ ученика">
+    <button type="button" class="mic" id="micBtn" aria-label="Начать говорить по-английски">
+      <span id="micIcon">🎤</span><span id="micLabel">Начать говорить</span>
+    </button>
+
+    <div class="send-row">
+      <textarea id="textInput" rows="1" maxlength="250" placeholder="…или напиши ответ по-английски" aria-label="Написать ответ по-английски"></textarea>
+      <button type="button" class="btn-primary" id="sendBtn" aria-label="Отправить ответ тьютору">Ответить</button>
+    </div>
+    <div class="counter"><span id="counter">0</span>/250</div>
+
+    <div class="tutor-controls">
+      <button type="button" id="repeatBtn" aria-label="Повторить вопрос тьютора">🔊 Повторить вопрос</button>
+      <button type="button" id="soundBtn" aria-label="Выключить звук">🔊 Звук включён</button>
+      <button type="button" id="resetBtn" class="btn-quiet" aria-label="Начать разговор заново">🗑 Начать заново</button>
     </div>
   </section>
 
-  <section class="panel" id="mistakes" hidden>
-    <h2>Разбор ошибок</h2>
-    <div id="mistakeList"><p class="none">Пока ошибок нет — говорите смелее.</p></div>
-  </section>
-
-  <div class="setup">
-    <div class="setup-line" id="topicRow"><span class="setup-label">Тема</span></div>
-    <div class="setup-line">
-      <span class="setup-label">Уровень</span>
-      <button class="chip" data-level="A1" aria-pressed="false">Начинающий</button>
-      <button class="chip" data-level="A2" aria-pressed="true">Базовый</button>
-      <button class="chip" data-level="B1" aria-pressed="false">Средний</button>
-      <button class="chip" data-level="B2" aria-pressed="false">Уверенный</button>
+  <!-- ДИАГНОСТИКА -->
+  <details class="panel">
+    <summary>Проверка браузера</summary>
+    <div class="panel-body">
+      <div class="diag" id="diag"></div>
+      <button type="button" id="micTest" class="btn-ghost" aria-label="Проверить доступ к микрофону">Проверить микрофон</button>
+      <p>Распознавание речи надёжнее всего работает в Chrome и в Safari на iPhone (iOS 14.5+). Если микрофон недоступен, отвечай текстом — весь остальной тренажёр работает.</p>
     </div>
-  </div>
+  </details>
 
-  <div class="stage" id="stage">
-    <div class="scene" id="scene" aria-hidden="true"></div>
-    <div class="char" id="char" role="img" aria-label="Алекс, собеседник"></div>
-    <div class="earcue" id="earcue" hidden>слушает…</div>
-    <div class="role" id="role">Алекс · новый знакомый</div>
-  </div>
-
-  <div class="transcript" id="transcript" aria-live="polite">
-    <div class="empty" id="empty">
-      Выберите тему и нажмите кнопку — Алекс заговорит первым.
-      Отвечайте голосом или пишите текстом.
-      <button class="start-btn" id="startBtn">Начать разговор</button>
-    </div>
-  </div>
-
-  <div class="composer">
-    <div class="suggestions" id="suggestions"></div>
-    <div class="status" id="status">Готово к разговору.</div>
-    <div class="inputrow">
-      <button class="mic" id="micBtn" aria-label="Говорить" disabled>🎤</button>
-      <div class="textwrap">
-        <input id="typed" type="text" inputmode="latin" autocapitalize="off" autocorrect="off"
-               placeholder="…или напишите по-английски" autocomplete="off" disabled>
-        <button id="sendBtn" disabled>→</button>
+  <!-- ПРИВАТНОСТЬ -->
+  <details class="panel">
+    <summary>Микрофон, ключ и данные</summary>
+    <div class="panel-body">
+      <div class="note">
+        <ul>
+          <li>Микрофон включается только после нажатия кнопки и выключается сам после фразы.</li>
+          <li>Распознавание речи выполняет браузер; качество зависит от браузера и устройства.</li>
+          <li>Речь превращается в текст, текст уходит в Gemini только если ты сам ввёл ключ.</li>
+          <li>API-ключ нельзя оставлять в опубликованном frontend-коде — его увидит любой посетитель.</li>
+          <li>Для демонстрации ключ не нужен: работает демо-режим.</li>
+          <li>Для публичного продукта нужен свой backend endpoint, который хранит ключ на сервере и сам обращается к Gemini.</li>
+          <li>Никаких счётчиков и трекеров на странице нет.</li>
+        </ul>
       </div>
     </div>
-    <div class="options">
-      <button class="tgl" id="voiceBtn" aria-pressed="true">🔊 Озвучка</button>
-      <label><input type="checkbox" id="handsFree"> <span id="hfLabel">Слушать автоматически</span></label>
-      <label>Скорость <input type="range" id="rate" min="0.6" max="1.2" step="0.05" value="0.86"></label>
-      <button class="tgl" id="restartBtn">Заново</button>
-    </div>
-  </div>
+  </details>
+
+  <footer>Говори смело: ошибки здесь — часть тренировки.</footer>
 </div>
 
+<div class="sr-only" id="srStatus" role="status" aria-live="assertive"></div>
+
 <script>
-/* ============================================================
-   0. Платформа
-   ============================================================ */
-const IOS = /iP(hone|od|ad)/.test(navigator.userAgent) ||
-            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+"use strict";
 
 /* ============================================================
-   1. Темы и сценарии
+   1. ДАННЫЕ ТЕМ
+   Для каждой темы: роль тьютора, учебная цель, стартовая реплика,
+   5–7 подсказок, лексика и заготовленные ответы для демо-режима.
    ============================================================ */
 const TOPICS = [
-  {key:"smalltalk", ru:"Знакомство"},
-  {key:"cafe",      ru:"В кафе"},
-  {key:"shop",      ru:"В магазине"},
-  {key:"school",    ru:"Школа"},
-  {key:"hobbies",   ru:"Хобби"},
-  {key:"travel",    ru:"Поездка"},
-  {key:"doctor",    ru:"У врача"},
-  {key:"phone",     ru:"По телефону"},
-  {key:"future",    ru:"Планы"},
-  {key:"free",      ru:"Свободная тема"}
+  {
+    id:"greeting", ru:"Знакомство", en:"Greeting",
+    role:"a friendly English-speaking teenager named Alex meeting someone new",
+    goal:"представиться, назвать имя, возраст, город и настроение",
+    start:"Hello! I'm Alex. What's your name?",
+    words:["My name is…","I'm 14.","I'm from Moscow.","Nice to meet you.","How are you?"],
+    hints:["My name is Ivan.","I'm from Moscow.","I'm 14 years old.","Nice to meet you!","I'm fine, thank you.","And you?"],
+    demo:[
+      "Nice to meet you! How old are you?",
+      "Cool! Where are you from?",
+      "That sounds great. Have you got any brothers or sisters?",
+      "Thanks for telling me! What do you like doing after school?",
+      "I like that too. Who is your best friend?"
+    ]
+  },
+  {
+    id:"school", ru:"Школа", en:"School",
+    role:"a friendly classmate talking about school life",
+    goal:"рассказать про предметы, расписание и учителей простыми словами",
+    start:"Hi! What is your favourite subject at school?",
+    words:["My favourite subject is…","I have six lessons.","I like maths.","It's difficult.","My teacher is kind."],
+    hints:["My favourite subject is maths.","I like English and history.","I have six lessons today.","Maths is difficult for me.","My teacher is very kind.","I go to school at 8 o'clock."],
+    demo:[
+      "Nice! How many lessons do you have today?",
+      "That's a lot! Which subject is difficult for you?",
+      "I understand. Do you like your school?",
+      "Good to know! What do you do at break time?",
+      "Sounds fun. Do you have homework today?"
+    ]
+  },
+  {
+    id:"hobbies", ru:"Хобби", en:"Hobbies",
+    role:"a friendly teenager who loves asking about hobbies",
+    goal:"говорить о свободном времени с конструкцией I like + -ing",
+    start:"What do you like to do in your free time?",
+    words:["I like playing…","I love drawing.","I play football.","twice a week","with my friends"],
+    hints:["I like playing football.","I love drawing.","I play video games with my friends.","I listen to music every day.","I read books sometimes.","Twice a week."],
+    demo:[
+      "That's cool! How often do you do it?",
+      "Nice! Do you do it alone or with friends?",
+      "Great. When did you start?",
+      "Interesting! What music do you like?",
+      "Awesome. Do you want to try a new hobby?"
+    ]
+  },
+  {
+    id:"cafe", ru:"В кафе", en:"At the Café",
+    role:"a polite waiter in a small café",
+    goal:"сделать заказ вежливыми фразами I'd like / Can I have",
+    start:"Hello! What would you like to order?",
+    words:["I'd like…","Can I have…, please?","a cup of tea","How much is it?","Thank you!"],
+    hints:["I'd like a pizza, please.","Can I have a cup of tea?","Orange juice, please.","How much is it?","No, thank you.","That's all, thanks."],
+    demo:[
+      "Good choice! Would you like something to drink?",
+      "Sure. Anything else?",
+      "That's 7 dollars. Do you want to eat here or take away?",
+      "Perfect. Is this your first time here?",
+      "Thanks! Enjoy your meal. Do you like sweet food?"
+    ]
+  },
+  {
+    id:"shopping", ru:"В магазине", en:"Shopping",
+    role:"a helpful shop assistant in a clothes shop",
+    goal:"спросить о размере, цене и примерке",
+    start:"Can I help you find something?",
+    words:["I'm looking for…","How much is it?","Have you got a bigger size?","Can I try it on?","I'll take it."],
+    hints:["I'm looking for a T-shirt.","How much is it?","Have you got a bigger size?","Can I try it on?","It's too expensive.","I'll take it, thanks."],
+    demo:[
+      "Of course! What colour do you want?",
+      "Nice choice. What size are you?",
+      "Here you are. Do you want to try it on?",
+      "It costs 20 dollars. Is that okay for you?",
+      "Great! Do you need anything else today?"
+    ]
+  },
+  {
+    id:"routine", ru:"Распорядок дня", en:"Daily Routine",
+    role:"a friendly penfriend curious about daily life",
+    goal:"описать день в Present Simple и назвать время",
+    start:"What time do you usually get up?",
+    words:["I get up at…","I have breakfast.","then","after school","I go to bed at ten."],
+    hints:["I get up at seven o'clock.","I have breakfast at half past seven.","I go to school by bus.","I do my homework after school.","I go to bed at ten.","On Sunday I get up late."],
+    demo:[
+      "Quite early! What do you have for breakfast?",
+      "Sounds good. How do you go to school?",
+      "Okay! What do you do after school?",
+      "Nice. What time do you go to bed?",
+      "Do you have a different routine at the weekend?"
+    ]
+  },
+  {
+    id:"travel", ru:"Путешествия", en:"Travel",
+    role:"a friendly traveller planning trips",
+    goal:"говорить о планах и желаниях: I want to / I would like to",
+    start:"Where would you like to travel?",
+    words:["I'd like to go to…","by plane","next summer","with my family","because it's beautiful"],
+    hints:["I'd like to go to Italy.","I want to visit London.","By plane, I think.","Next summer with my family.","I want to see the sea.","I have never been abroad."],
+    demo:[
+      "Great choice! Why do you want to go there?",
+      "Nice! Who do you want to travel with?",
+      "Cool. How do you want to get there — by plane or by train?",
+      "Sounds fun. What do you want to see there?",
+      "Have you been to another country before?"
+    ]
+  },
+  {
+    id:"family", ru:"Семья и друзья", en:"Family and Friends",
+    role:"a friendly teenager talking about family and friends",
+    goal:"рассказать о семье: have got, местоимения, простые описания",
+    start:"Have you got a big family?",
+    words:["I've got a sister.","My mum is a doctor.","He is funny.","We live together.","my best friend"],
+    hints:["I've got one sister.","No, my family is small.","My mum is a teacher.","My brother is ten years old.","My best friend is Kolya.","We play football together."],
+    demo:[
+      "Nice! Tell me about your sister or brother.",
+      "That's cool. What does your mum do?",
+      "Interesting! Do you spend a lot of time together?",
+      "Good. Who is your best friend?",
+      "Nice! What do you do together?"
+    ]
+  }
 ];
 
-/* Каждый ход: ask — что говорит Алекс, suggest — что можно ответить,
-   hear — реакции на конкретные слова в ответе ученика. */
-const SCRIPTS = {
-  smalltalk:[
-    {ask:"Hey! I'm Alex, from Chicago. What's your name?",
-     suggest:["My name is …","I'm …","Hi! I'm …"]},
-    {ask:"Nice to meet you{name}! Where do you live?",
-     suggest:["I live in Moscow.","I'm from a small town.","I live near Moscow."],
-     hear:[{re:/moscow/i,say:"Moscow! I've only seen it in photos."},
-           {re:/village|small town|small city/i,say:"A quiet place, then."}]},
-    {ask:"Do you live with your family?",
-     suggest:["Yes, with my parents.","I live with my mum and my brother.","No, I live alone."],
-     hear:[{re:/brother|sister/i,say:"Oh, so the house is never quiet."},
-           {re:/alone/i,say:"On your own — that takes some organising."}]},
-    {ask:"What does a normal weekday look like for you?",
-     suggest:["I go to school, then I study at home.","I have classes until four.","School, homework, football."]},
-    {ask:"What time do you get up in the morning?",
-     suggest:["I get up at seven.","Too early — half past six.","I wake up at eight."],
-     hear:[{re:/five|six/i,say:"That's early. I could never do that."},
-           {re:/nine|ten|eleven/i,say:"Now that's a good morning."}]},
-    {ask:"And how do you relax after a long day?",
-     suggest:["I watch YouTube.","I listen to music.","I go for a walk."]}
-  ],
-  cafe:[
-    {ask:"Hi there, welcome in! What can I get you?",
-     suggest:["Can I have a coffee, please?","I'd like a tea, please.","What do you recommend?"],
-     hear:[{re:/coffee/i,say:"One coffee, coming up."},
-           {re:/tea/i,say:"Tea it is."},
-           {re:/recommend/i,say:"Our flat white is the best thing here."}]},
-    {ask:"Would you like anything to eat with that?",
-     suggest:["A croissant, please.","No thanks, just the drink.","What cakes do you have?"]},
-    {ask:"Is that for here or to take away?",
-     suggest:["For here, please.","To take away.","For here — I'll sit by the window."]},
-    {ask:"That's four fifty. Cash or card?",
-     suggest:["Card, please.","Cash — here you go.","Can I pay by phone?"]},
-    {ask:"Thanks! First time in here?",
-     suggest:["Yes, it's my first time.","No, I come here often.","My friend told me about it."]},
-    {ask:"Where are you heading after this?",
-     suggest:["I'm going to school.","I'm meeting a friend.","Straight home."]}
-  ],
-  shop:[
-    {ask:"Hi! Are you looking for anything in particular?",
-     suggest:["I'm looking for a jacket.","Just looking, thanks.","Do you have this in blue?"],
-     hear:[{re:/jacket|coat|shirt|jeans|shoes|trainers/i,say:"Good timing, we got new ones this week."},
-           {re:/just look/i,say:"No problem, take your time."}]},
-    {ask:"What size do you need?",
-     suggest:["Medium, please.","Large.","I'm not sure — can you help me?"]},
-    {ask:"Here you go. Do you want to try it on? The fitting room is on the left.",
-     suggest:["Yes, please.","Where is the fitting room?","No, I'll take it."]},
-    {ask:"So, how was it?",
-     suggest:["It fits well.","It's a bit too big.","I don't like the colour."],
-     hear:[{re:/big|large|small|tight/i,say:"I can bring another size."},
-           {re:/fits|good|great|like it/i,say:"It suits you, honestly."}]},
-    {ask:"It's thirty euros. Would you like to take it?",
-     suggest:["Yes, I'll take it.","That's too expensive for me.","Is there a discount?"]},
-    {ask:"Anything else today?",
-     suggest:["No, that's all, thanks.","Do you sell shoes too?","Where do I pay?"]}
-  ],
-  school:[
-    {ask:"So tell me — what's your favourite subject at school?",
-     suggest:["My favourite subject is maths.","I like physics.","I don't really have one."],
-     hear:[{re:/math|physic|chemist|biolog|informat|computer|it\b/i,say:"Ah, a science person."},
-           {re:/english|literature|histor|art|music/i,say:"Nice, the reading and writing side of things."}]},
-    {ask:"Why do you like it?",
-     suggest:["Because it's interesting.","Because I'm good at it.","Our teacher is great."]},
-    {ask:"And which subject is hardest for you?",
-     suggest:["Chemistry is hard for me.","I struggle with grammar.","History — too many dates."]},
-    {ask:"How much homework do you usually get?",
-     suggest:["About two hours every day.","Too much!","Not much on Fridays."],
-     hear:[{re:/too much|a lot|lot of/i,say:"Yeah, that sounds heavy."},
-           {re:/not much|little|nothing/i,say:"Lucky you."}]},
-    {ask:"Are you preparing for any exams right now?",
-     suggest:["Yes, I'm preparing for my exams.","I'm studying for maths.","Not yet."]},
-    {ask:"What do you want to study after school?",
-     suggest:["I want to study engineering.","Something with computers.","I'm not sure yet."]}
-  ],
-  hobbies:[
-    {ask:"So what do you do for fun?",
-     suggest:["I play video games.","I play football.","I like drawing."],
-     hear:[{re:/game|gaming|playstation|xbox/i,say:"A gamer — same here."},
-           {re:/football|basketball|swim|run|sport|gym|box/i,say:"Nice, you're the sporty type."},
-           {re:/draw|paint|music|guitar|piano|sing|write/i,say:"Oh, something creative."},
-           {re:/read|book/i,say:"Books! Not many people say that now."}]},
-    {ask:"How long have you been doing that?",
-     suggest:["For about three years.","Since I was ten.","Only a few months."]},
-    {ask:"Do you do it alone or with friends?",
-     suggest:["With my friends.","Usually alone.","Both, it depends."]},
-    {ask:"Are you any good at it?",
-     suggest:["I'm pretty good.","Not really, but I enjoy it.","I'm still learning."],
-     hear:[{re:/not really|bad|terrible|learning/i,say:"That's the fun part, though."},
-           {re:/good|great|best|pretty/i,say:"Modest, I see."}]},
-    {ask:"What would you like to try next?",
-     suggest:["I want to try snowboarding.","I'd like to learn the guitar.","Nothing new for now."]},
-    {ask:"What did you do last weekend?",
-     suggest:["I stayed home and played games.","I met my friends.","I visited my grandparents."]}
-  ],
-  travel:[
-    {ask:"Have you ever travelled abroad?",
-     suggest:["Yes, I've been to Turkey.","No, not yet.","Only inside Russia."],
-     hear:[{re:/no|not yet|never/i,say:"You'll get there. It's worth it."},
-           {re:/turkey|egypt|italy|spain|china|georgia|dubai/i,say:"Oh nice, I've never been."}]},
-    {ask:"What's the best place you've been to?",
-     suggest:["Sochi was the best.","I loved the mountains.","A small town by the sea."]},
-    {ask:"How did you get there — plane, train, car?",
-     suggest:["We went by plane.","By train — it took a day.","We drove there."]},
-    {ask:"Where did you stay?",
-     suggest:["We stayed in a hotel.","At my aunt's place.","In a small guest house."]},
-    {ask:"What did you do there?",
-     suggest:["We swam and walked a lot.","I tried the local food.","We visited museums."]},
-    {ask:"If someone gave you a free ticket tomorrow, where would you go?",
-     suggest:["I'd go to Japan.","Somewhere warm.","I'd visit Italy."]}
-  ],
-  doctor:[
-    {ask:"Good morning, come in and sit down. What's the problem?",
-     suggest:["I have a headache.","I've got a sore throat.","I feel tired all the time."],
-     hear:[{re:/head/i,say:"Right, a headache."},
-           {re:/throat|cough|cold/i,say:"Let me have a look at your throat."},
-           {re:/tired|sleep/i,say:"Hmm, that can have a few causes."}]},
-    {ask:"How long has it been like that?",
-     suggest:["Since yesterday.","For three days.","About a week."]},
-    {ask:"Do you have a temperature?",
-     suggest:["Yes, thirty-eight.","No, I don't think so.","I haven't checked."]},
-    {ask:"Are you taking any medicine at the moment?",
-     suggest:["No, nothing.","Only painkillers.","I take vitamins."]},
-    {ask:"Rest and drink plenty of water. Any questions?",
-     suggest:["Can I go to school tomorrow?","Do I need antibiotics?","When should I come back?"]},
-    {ask:"Take care of yourself. Feeling a bit better already?",
-     suggest:["Yes, thank you.","A little better.","Not yet, but I hope so."]}
-  ],
-  phone:[
-    {ask:"Hello, Riverside Restaurant, Alex speaking. How can I help?",
-     suggest:["I'd like to book a table.","Are you open on Sunday?","Do I need a reservation?"]},
-    {ask:"For how many people?",
-     suggest:["For two, please.","A table for four.","Just me."]},
-    {ask:"And what time would suit you?",
-     suggest:["At seven, please.","Around eight.","Is six too early?"]},
-    {ask:"Can I take your name?",
-     suggest:["It's Andrew.","My name is …","Yes, it's …"]},
-    {ask:"Anything I should know — a birthday, any allergies?",
-     suggest:["No, nothing special.","It's my mum's birthday.","I don't eat meat."]},
-    {ask:"See you then. Do you know how to find us?",
-     suggest:["Yes, I know the place.","No, where exactly are you?","Can you give me the address?"]}
-  ],
-  future:[
-    {ask:"So what do you want to do after school?",
-     suggest:["I want to go to university.","I want to study programming.","I don't know yet."],
-     hear:[{re:/universit|institute|college/i,say:"Good, that's a solid plan."},
-           {re:/don't know|not sure|no idea/i,say:"That's fine, there's time."}]},
-    {ask:"Why that?",
-     suggest:["Because I like building things.","My father does the same job.","It pays well."]},
-    {ask:"Where would you like to live one day?",
-     suggest:["I'd like to live in Moscow.","Somewhere by the sea.","Abroad, maybe."]},
-    {ask:"What job could you never do?",
-     suggest:["I could never be a teacher.","Nothing with numbers.","I wouldn't work in an office."]},
-    {ask:"What's one thing you want to learn this year?",
-     suggest:["I want to learn English properly.","I'd like to learn to drive.","Guitar."]},
-    {ask:"Where do you see yourself in five years?",
-     suggest:["I hope I'll be at university.","Working as an engineer.","I have no idea!"]}
-  ],
-  free:[
-    {ask:"Alright, free talk. How's your day going?",
-     suggest:["It's been a busy day.","Pretty good, thanks.","I'm tired, to be honest."],
-     hear:[{re:/good|great|fine|okay/i,say:"Glad to hear it."},
-           {re:/tired|busy|hard|bad|long/i,say:"Yeah, some days are like that."}]},
-    {ask:"Tell me a bit more about it.",
-     suggest:["Well, it started this morning …","There's not much to say.","I had a test today."]},
-    {ask:"What are you doing later today?",
-     suggest:["I'm doing my homework.","Nothing much.","I'm meeting friends."]},
-    {ask:"What did you watch or read recently?",
-     suggest:["I watched a film yesterday.","I'm reading a book about space.","Just YouTube videos."]},
-    {ask:"If you had a free day tomorrow, what would you do?",
-     suggest:["I'd sleep all morning.","I'd go out with friends.","I'd play games all day."]},
-    {ask:"Good chat. What should we talk about next time?",
-     suggest:["Maybe travel.","Something about music.","You choose."]}
-  ]
-};
-
-
 /* ============================================================
-   1b. Фоны сцен и персонаж (инлайн SVG — работает без сети)
+   2. ЛОКАЛЬНАЯ ПРОВЕРКА ЧАСТЫХ ОШИБОК (демо-режим)
    ============================================================ */
-const SCENES = {
-  smalltalk:{sky1:"#DCE8F2", sky2:"#E7EFE4", role:"новый знакомый", shirt:"#3E7A8C", prop:"scarf", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#DCE8F2"/>
-      <circle cx="705" cy="58" r="32" fill="#FAE6A6"/>
-      <g fill="#C2D2DD">
-        <rect x="30" y="96" width="72" height="150"/><rect x="118" y="58" width="56" height="188"/>
-        <rect x="470" y="84" width="66" height="162"/><rect x="556" y="120" width="94" height="126"/>
-      </g>
-      <g fill="#A6BCC9">
-        <rect x="44" y="112" width="14" height="16"/><rect x="72" y="112" width="14" height="16"/>
-        <rect x="44" y="146" width="14" height="16"/><rect x="72" y="146" width="14" height="16"/>
-        <rect x="132" y="76" width="12" height="16"/><rect x="150" y="76" width="12" height="16"/>
-        <rect x="132" y="110" width="12" height="16"/><rect x="150" y="110" width="12" height="16"/>
-        <rect x="486" y="102" width="14" height="16"/><rect x="508" y="102" width="14" height="16"/>
-        <rect x="572" y="138" width="16" height="16"/><rect x="606" y="138" width="16" height="16"/>
-      </g>
-      <rect y="246" width="800" height="54" fill="#C9D8C4"/>
-      <rect y="246" width="800" height="9" fill="#B4C7AE"/>
-      <g><rect x="296" y="168" width="13" height="80" fill="#9B7C58"/><circle cx="302" cy="156" r="44" fill="#A7C59A"/></g>
-      <g><rect x="398" y="192" width="10" height="56" fill="#9B7C58"/><circle cx="403" cy="182" r="31" fill="#93BA88"/></g>
-      <g fill="#93A8B6"><rect x="612" y="206" width="96" height="9" rx="4"/><rect x="620" y="215" width="8" height="32"/><rect x="692" y="215" width="8" height="32"/></g>
-    </svg>`},
-
-  cafe:{sky1:"#F1E2CC", sky2:"#E8D6BB", role:"бариста", shirt:"#5C6B63", prop:"apron", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EFE0CB"/>
-      <g stroke="#A5865F" stroke-width="3">
-        <line x1="210" y1="0" x2="210" y2="52"/><line x1="330" y1="0" x2="330" y2="34"/><line x1="450" y1="0" x2="450" y2="60"/>
-      </g>
-      <g fill="#F7D98D"><circle cx="210" cy="62" r="15"/><circle cx="330" cy="44" r="15"/><circle cx="450" cy="70" r="15"/></g>
-      <rect x="60" y="74" width="146" height="104" rx="7" fill="#3D4A44"/>
-      <g stroke="#D8E2D6" stroke-width="3" stroke-linecap="round">
-        <line x1="78" y1="98" x2="176" y2="98"/><line x1="78" y1="118" x2="152" y2="118"/>
-        <line x1="78" y1="138" x2="166" y2="138"/><line x1="78" y1="158" x2="128" y2="158"/>
-      </g>
-      <rect x="512" y="92" width="252" height="9" rx="4" fill="#B78D5E"/>
-      <g fill="#F3EFE6" stroke="#D6CDBC"><circle cx="548" cy="80" r="11"/><circle cx="592" cy="80" r="11"/><circle cx="636" cy="80" r="11"/><circle cx="680" cy="80" r="11"/><circle cx="724" cy="80" r="11"/></g>
-      <rect x="566" y="126" width="128" height="78" rx="7" fill="#9FAAA6"/>
-      <rect x="600" y="152" width="44" height="34" rx="4" fill="#6C7874"/>
-      <rect x="590" y="118" width="80" height="10" rx="5" fill="#7E8985"/>
-      <rect y="204" width="800" height="96" fill="#8D6A47"/>
-      <rect y="196" width="800" height="14" rx="4" fill="#B58658"/>
-      <g fill="#F3EFE6"><rect x="270" y="176" width="34" height="22" rx="4"/><rect x="266" y="170" width="42" height="8" rx="4"/></g>
-    </svg>`},
-
-  shop:{sky1:"#F2EFE8", sky2:"#E6E6DE", role:"продавец", shirt:"#6E5B8A", prop:"badge", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#F1EEE6"/>
-      <rect y="250" width="800" height="50" fill="#DED8CB"/>
-      <rect x="120" y="78" width="520" height="7" rx="3.5" fill="#A9A296"/>
-      <g stroke="#8E8778" stroke-width="2" fill="none">
-        <path d="M170 85 v14"/><path d="M240 85 v14"/><path d="M310 85 v14"/><path d="M380 85 v14"/><path d="M450 85 v14"/><path d="M520 85 v14"/><path d="M590 85 v14"/>
-      </g>
-      <g>
-        <path d="M150 99 h40 l16 82 h-72 z" fill="#C2766A"/>
-        <path d="M222 99 h36 l14 96 h-64 z" fill="#5E82A6"/>
-        <path d="M292 99 h36 l12 74 h-60 z" fill="#7E9A72"/>
-        <path d="M362 99 h36 l16 92 h-68 z" fill="#D9B26A"/>
-        <path d="M432 99 h36 l12 78 h-60 z" fill="#8E7BA6"/>
-        <path d="M502 99 h36 l14 88 h-64 z" fill="#6E9B96"/>
-        <path d="M572 99 h36 l12 70 h-60 z" fill="#C98F6B"/>
-      </g>
-      <g><rect x="672" y="96" width="92" height="154" rx="46" fill="#DCE6E6" stroke="#BFCBCB" stroke-width="4"/></g>
-      <g fill="#B9B2A4"><rect x="90" y="196" width="60" height="54" rx="5"/><rect x="98" y="186" width="44" height="12" rx="4"/></g>
-    </svg>`},
-
-  school:{sky1:"#E5EDE6", sky2:"#EFEADC", role:"друг из класса", shirt:"#496C8C", prop:"glasses", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EBEFE8"/>
-      <rect x="150" y="40" width="470" height="170" rx="6" fill="#34433C" stroke="#A98A62" stroke-width="9"/>
-      <g stroke="#D9E3D7" stroke-width="3" stroke-linecap="round" fill="none">
-        <line x1="186" y1="80" x2="330" y2="80"/><line x1="186" y1="104" x2="392" y2="104"/>
-        <path d="M186 140 q30 -26 60 0 q30 26 60 0"/>
-        <line x1="420" y1="140" x2="560" y2="140"/><line x1="420" y1="164" x2="500" y2="164"/>
-        <text x="186" y="188" fill="#D9E3D7" font-family="Georgia" font-size="26">Hello!</text>
-      </g>
-      <circle cx="700" cy="76" r="34" fill="#F4F1E6" stroke="#B5AD9B" stroke-width="4"/>
-      <g stroke="#4A5A52" stroke-width="3" stroke-linecap="round"><line x1="700" y1="76" x2="700" y2="58"/><line x1="700" y1="76" x2="714" y2="82"/></g>
-      <rect y="238" width="800" height="62" fill="#D8CDB8"/>
-      <g fill="#C0A177"><rect x="60" y="212" width="150" height="12" rx="4"/><rect x="70" y="224" width="10" height="34"/><rect x="190" y="224" width="10" height="34"/></g>
-      <g fill="#C0A177"><rect x="560" y="212" width="150" height="12" rx="4"/><rect x="570" y="224" width="10" height="34"/><rect x="690" y="224" width="10" height="34"/></g>
-    </svg>`},
-
-  hobbies:{sky1:"#E7E3EF", sky2:"#EFE8DF", role:"приятель", shirt:"#41515E", prop:"headphones", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EDE8F0"/>
-      <rect y="244" width="800" height="56" fill="#D7CFC2"/>
-      <rect x="430" y="54" width="300" height="172" rx="10" fill="#2C3640"/>
-      <rect x="444" y="68" width="272" height="144" rx="6" fill="#3E5A72"/>
-      <g opacity=".9"><circle cx="520" cy="130" r="26" fill="#7FD2C6"/><rect x="580" y="104" width="46" height="46" rx="6" fill="#F0C97A"/><path d="M660 156 l26 -46 l26 46 z" fill="#E38C7A"/></g>
-      <rect x="540" y="226" width="80" height="10" rx="5" fill="#2C3640"/>
-      <g><rect x="60" y="150" width="300" height="96" rx="16" fill="#8E7A6B"/><rect x="46" y="170" width="32" height="76" rx="12" fill="#7C6A5C"/><rect x="342" y="170" width="32" height="76" rx="12" fill="#7C6A5C"/>
-         <rect x="86" y="136" width="110" height="30" rx="12" fill="#A08A78"/><rect x="216" y="136" width="110" height="30" rx="12" fill="#A08A78"/></g>
-      <g><rect x="392" y="212" width="14" height="34" fill="#9B7C58"/><path d="M399 212 q-34 -14 -26 -46 q22 4 26 46" fill="#7FA872"/><path d="M399 212 q34 -18 28 -50 q-24 6 -28 50" fill="#8FB981"/></g>
-      <g fill="#4B5A64"><rect x="240" y="118" width="56" height="22" rx="11"/><circle cx="252" cy="129" r="4" fill="#B9C6CC"/><circle cx="284" cy="129" r="4" fill="#B9C6CC"/></g>
-    </svg>`},
-
-  travel:{sky1:"#D6E6F2", sky2:"#E9E4D8", role:"попутчик", shirt:"#2E6E8E", prop:"cap", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EDE8DE"/>
-      <path d="M150 226 v-116 q130 -66 260 0 v116 z" fill="#BFDCEF"/>
-      <path d="M150 226 v-116 q130 -66 260 0 v116 z" fill="none" stroke="#A3B5BE" stroke-width="7"/>
-      <line x1="280" y1="82" x2="280" y2="226" stroke="#A3B5BE" stroke-width="7"/>
-      <g fill="#F4F8FA"><ellipse cx="214" cy="132" rx="30" ry="11"/><ellipse cx="350" cy="112" rx="24" ry="9"/></g>
-      <g fill="#7E8E98" transform="translate(300,150) rotate(-12)">
-        <path d="M0 0 l70 -8 l16 -20 l10 18 l30 -4 l-30 12 l-10 18 l-16 -18 z"/>
-      </g>
-      <rect y="226" width="800" height="74" fill="#D9D2C4"/>
-      <g fill="#6E7C85"><rect x="470" y="176" width="230" height="16" rx="8"/>
-        <rect x="476" y="140" width="66" height="38" rx="8"/><rect x="550" y="140" width="66" height="38" rx="8"/><rect x="624" y="140" width="66" height="38" rx="8"/>
-        <rect x="486" y="192" width="10" height="34"/><rect x="676" y="192" width="10" height="34"/></g>
-      <g><rect x="80" y="188" width="62" height="46" rx="7" fill="#C2766A"/><rect x="100" y="178" width="22" height="12" rx="5" fill="#9C5B52"/><rect x="80" y="206" width="62" height="6" fill="#A85F55"/></g>
-    </svg>`},
-
-  doctor:{sky1:"#E3EDEF", sky2:"#EFF2F1", role:"врач", shirt:"#FFFFFF", prop:"coat", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EBF1F1"/>
-      <rect y="240" width="800" height="60" fill="#DCE4E3"/>
-      <g><rect x="440" y="150" width="300" height="52" rx="10" fill="#9CB6C4"/><rect x="440" y="128" width="90" height="30" rx="10" fill="#B4C9D3"/>
-         <rect x="452" y="202" width="12" height="38" fill="#7E93A0"/><rect x="716" y="202" width="12" height="38" fill="#7E93A0"/></g>
-      <g fill="#CBD9DC"><rect x="120" y="60" width="12" height="180"/><rect x="120" y="60" width="190" height="12" rx="6"/>
-         <path d="M132 72 h166 v150 q-40 -14 -82 0 q-42 14 -84 0 z" fill="#DCE7E9"/></g>
-      <g><rect x="600" y="58" width="86" height="64" rx="6" fill="#FFFFFF" stroke="#C3D2D4" stroke-width="3"/>
-         <rect x="636" y="70" width="14" height="40" fill="#C2766A"/><rect x="623" y="83" width="40" height="14" fill="#C2766A"/></g>
-      <g><rect x="352" y="196" width="14" height="44" fill="#9B7C58"/><path d="M359 196 q-32 -16 -24 -48 q22 6 24 48" fill="#7FA872"/><path d="M359 196 q32 -18 26 -50 q-24 6 -26 50" fill="#8FB981"/></g>
-    </svg>`},
-
-  phone:{sky1:"#E9E7DF", sky2:"#EFEAE0", role:"администратор ресторана", shirt:"#4C5A63", prop:"headset", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EEEAE0"/>
-      <rect y="238" width="800" height="62" fill="#D9CFC0"/>
-      <g><rect x="470" y="44" width="250" height="150" rx="8" fill="#BFDCEF" stroke="#A98A62" stroke-width="8"/>
-         <line x1="595" y1="52" x2="595" y2="186" stroke="#A98A62" stroke-width="6"/>
-         <ellipse cx="540" cy="96" rx="26" ry="10" fill="#F4F8FA"/></g>
-      <g fill="#A9865E"><rect x="80" y="176" width="300" height="14" rx="5"/><rect x="96" y="190" width="12" height="48"/><rect x="352" y="190" width="12" height="48"/></g>
-      <g><rect x="120" y="150" width="70" height="26" rx="4" fill="#F3EFE6" stroke="#CFC6B4"/><rect x="210" y="142" width="46" height="34" rx="4" fill="#C2766A"/>
-         <rect x="286" y="158" width="30" height="18" rx="4" fill="#7E8E98"/><rect x="292" y="150" width="18" height="10" rx="4" fill="#6E7C85"/></g>
-      <circle cx="400" cy="72" r="30" fill="#F4F1E6" stroke="#B5AD9B" stroke-width="4"/>
-      <g stroke="#4A5A52" stroke-width="3" stroke-linecap="round"><line x1="400" y1="72" x2="400" y2="56"/><line x1="400" y1="72" x2="412" y2="78"/></g>
-    </svg>`},
-
-  future:{sky1:"#F0DCC6", sky2:"#E8CDB4", role:"старший друг", shirt:"#37474F", prop:"collar", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <defs><linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#F6D9B8"/><stop offset="1" stop-color="#E9B79A"/></linearGradient></defs>
-      <rect width="800" height="300" fill="url(#fsky)"/>
-      <circle cx="620" cy="150" r="54" fill="#F6C98C"/>
-      <g fill="#9E7B7E" opacity=".85">
-        <rect x="40" y="130" width="70" height="170"/><rect x="124" y="90" width="54" height="210"/>
-        <rect x="192" y="158" width="82" height="142"/><rect x="290" y="110" width="60" height="190"/>
-        <rect x="366" y="172" width="90" height="128"/><rect x="470" y="128" width="58" height="172"/>
-        <rect x="544" y="184" width="76" height="116"/><rect x="636" y="144" width="64" height="156"/><rect x="716" y="190" width="70" height="110"/>
-      </g>
-      <g fill="#F7E3C4" opacity=".75">
-        <rect x="54" y="148" width="12" height="16"/><rect x="82" y="148" width="12" height="16"/><rect x="138" y="112" width="12" height="16"/>
-        <rect x="156" y="150" width="12" height="16"/><rect x="306" y="132" width="12" height="16"/><rect x="486" y="150" width="12" height="16"/>
-        <rect x="652" y="166" width="12" height="16"/><rect x="732" y="210" width="12" height="16"/>
-      </g>
-      <g stroke="#8C6A6E" stroke-width="3" fill="none" stroke-linecap="round">
-        <path d="M170 62 q10 -8 20 0"/><path d="M196 74 q10 -8 20 0"/><path d="M150 86 q10 -8 20 0"/>
-      </g>
-    </svg>`},
-
-  free:{sky1:"#E8E4DA", sky2:"#EFE9DC", role:"друг", shirt:"#7A5C4A", prop:"hoodie", svg:`
-    <svg class="scene" viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
-      <rect width="800" height="300" fill="#EDE8DD"/>
-      <rect y="242" width="800" height="58" fill="#D6CCBC"/>
-      <g><rect x="420" y="50" width="330" height="196" rx="6" fill="#B08A5E"/>
-         <rect x="432" y="62" width="306" height="52" fill="#C79C6B"/><rect x="432" y="126" width="306" height="52" fill="#C79C6B"/><rect x="432" y="190" width="306" height="48" fill="#C79C6B"/>
-         <g fill="#5E7F8C"><rect x="444" y="68" width="14" height="42"/><rect x="464" y="68" width="12" height="42"/></g>
-         <g fill="#A8574E"><rect x="484" y="70" width="16" height="40"/><rect x="506" y="70" width="10" height="40"/></g>
-         <g fill="#6E8A62"><rect x="446" y="132" width="12" height="42"/><rect x="464" y="132" width="16" height="42"/></g>
-         <g fill="#8A6E9A"><rect x="492" y="134" width="14" height="40"/><rect x="512" y="134" width="12" height="40"/></g>
-         <g fill="#C8A45E"><rect x="450" y="196" width="16" height="38"/><rect x="472" y="196" width="12" height="38"/></g></g>
-      <g><rect x="120" y="70" width="180" height="130" rx="8" fill="#BFDCEF" stroke="#A98A62" stroke-width="7"/>
-         <ellipse cx="176" cy="112" rx="24" ry="9" fill="#F4F8FA"/></g>
-      <g><rect x="150" y="200" width="120" height="12" rx="5" fill="#A9865E"/>
-         <rect x="186" y="176" width="30" height="24" rx="4" fill="#F3EFE6" stroke="#CFC6B4"/><path d="M216 182 q12 6 0 12" fill="none" stroke="#CFC6B4" stroke-width="3"/></g>
-      <ellipse cx="300" cy="272" rx="190" ry="22" fill="#C4B7A3"/>
-    </svg>`}
-};
-
-const PROPS = {
-  scarf:`<path d="M40 96 q20 14 40 0 l4 14 q-24 14 -48 0 z" fill="#C2766A"/>`,
-  apron:`<path d="M40 130 q0 -34 20 -34 q20 0 20 34 z" fill="#EDE4D2"/>
-         <path d="M50 98 l10 -8 l10 8" fill="none" stroke="#D9CEB8" stroke-width="3"/>`,
-  badge:`<path d="M48 96 l12 16 l12 -16" fill="none" stroke="#D6D0E0" stroke-width="3"/>
-         <rect x="70" y="110" width="18" height="13" rx="3" fill="#F3F1F7" stroke="#CFC8DC" stroke-width="2"/>`,
-  glasses:`<g fill="none" stroke="#37474F" stroke-width="2.4">
-             <circle cx="49" cy="55" r="10"/><circle cx="71" cy="55" r="10"/><path d="M59 55 h2"/>
-             <path d="M39 53 l-9 -3"/><path d="M81 53 l9 -3"/></g>`,
-  headphones:`<path d="M27 56 q0 -32 33 -32 q33 0 33 32" fill="none" stroke="#39474F" stroke-width="6"/>
-              <rect x="19" y="52" width="14" height="24" rx="7" fill="#39474F"/>
-              <rect x="87" y="52" width="14" height="24" rx="7" fill="#39474F"/>`,
-  cap:`<path d="M28 40 q6 -26 32 -26 q26 0 32 26 z" fill="#2E6E8E"/>
-       <rect x="22" y="38" width="76" height="8" rx="4" fill="#26596F"/>`,
-  coat:`<path d="M18 130 q0 -38 42 -38 q42 0 42 38 z" fill="#FBFCFC"/>
-        <path d="M46 96 l14 12 l14 -12" fill="none" stroke="#DCE4E5" stroke-width="3"/>
-        <path d="M44 100 q16 24 32 2" fill="none" stroke="#43535B" stroke-width="2.6"/>
-        <circle cx="78" cy="106" r="5" fill="#9AA7AC"/>`,
-  headset:`<path d="M27 56 q0 -32 33 -32 q33 0 33 32" fill="none" stroke="#4C5A63" stroke-width="5"/>
-           <rect x="20" y="52" width="12" height="20" rx="6" fill="#4C5A63"/>
-           <path d="M92 62 q8 16 -10 20" fill="none" stroke="#4C5A63" stroke-width="3"/>
-           <circle cx="80" cy="84" r="4.5" fill="#4C5A63"/>`,
-  collar:`<path d="M46 96 l14 12 l14 -12" fill="none" stroke="#263238" stroke-width="4"/>`,
-  hoodie:`<path d="M14 130 q2 -40 46 -40 q44 0 46 40 z" fill="#7A5C4A"/>
-          <path d="M30 92 q30 22 60 0 q-6 -16 -30 -16 q-24 0 -30 16" fill="#8C6C58"/>
-          <path d="M52 106 v18" stroke="#6A4F40" stroke-width="3"/><path d="M68 106 v18" stroke="#6A4F40" stroke-width="3"/>`
-};
-
-function charSVG(key){
-  const sc = SCENES[key] || SCENES.free;
-  const shirt = sc.shirt || "#3E7A8C";
-  const prop = PROPS[sc.prop] || "";
-  const coatOrHood = sc.prop === "coat" || sc.prop === "hoodie";
-  return `<svg viewBox="0 0 120 132" xmlns="http://www.w3.org/2000/svg">
-    ${coatOrHood ? "" : `<path d="M18 132 q0 -38 42 -38 q42 0 42 38 z" fill="${shirt}"/>`}
-    ${coatOrHood ? prop : ""}
-    <rect x="52" y="74" width="16" height="22" fill="#E3AC85"/>
-    <ellipse cx="60" cy="52" rx="30" ry="33" fill="#F2C49E"/>
-    <circle cx="30" cy="55" r="5.5" fill="#EBB68E"/><circle cx="90" cy="55" r="5.5" fill="#EBB68E"/>
-    <path d="M29 44 q4 -30 31 -30 q27 0 31 30 q-11 -13 -31 -13 q-20 0 -31 13 z" fill="#4A3A2E"/>
-    <g stroke="#4A3A2E" stroke-width="2.6" fill="none" stroke-linecap="round">
-      <path d="M42 43 q7 -4 14 -1"/><path d="M64 42 q7 -3 14 1"/>
-    </g>
-    <circle cx="49" cy="54" r="3.6" fill="#2A3A44"/><circle cx="71" cy="54" r="3.6" fill="#2A3A44"/>
-    <circle cx="50.2" cy="52.8" r="1.1" fill="#fff"/><circle cx="72.2" cy="52.8" r="1.1" fill="#fff"/>
-    <rect class="lid" x="43" y="47" width="12" height="9" fill="#F2C49E"/>
-    <rect class="lid" x="65" y="47" width="12" height="9" fill="#F2C49E"/>
-    <path d="M60 55 q4 8 -2 10" fill="none" stroke="#D79B74" stroke-width="2" stroke-linecap="round"/>
-    <ellipse class="mouth" cx="60" cy="71" rx="8" ry="5" fill="#AE514A"/>
-    <path d="M44 66 q16 14 32 0" fill="none" stroke="#D79B74" stroke-width="1.6" opacity=".7"/>
-    ${coatOrHood ? "" : prop}
-  </svg>`;
-}
-
-const ROLE_PREFIX = "Алекс · ";
-
-const LEVELS = {
-  A1:{note:"Говорит очень просто и медленно.", rate:0.74},
-  A2:{note:"Говорит просто и медленно, поправляет по-дружески.", rate:0.86},
-  B1:{note:"Говорит в обычном темпе.", rate:0.96},
-  B2:{note:"Говорит живо, как с другом.", rate:1.06}
-};
-
-/* ============================================================
-   2. Проверка ошибок (типичные ошибки русскоязычных)
-   ============================================================ */
-function third(v){
-  const irr = {have:"has", do:"does", go:"goes", be:"is"};
-  const w = v.toLowerCase();
-  if(irr[w]) return irr[w];
-  if(/[^aeiou]y$/.test(w)) return w.slice(0,-1) + "ies";
-  if(/(s|x|z|ch|sh|o)$/.test(w)) return w + "es";
-  return w + "s";
-}
-function base(v){
-  const irr = {went:"go", saw:"see", did:"do", had:"have", ate:"eat", took:"take",
-    came:"come", made:"make", got:"get", bought:"buy", said:"say", wrote:"write",
-    knew:"know", gave:"give", found:"find", thought:"think", felt:"feel",
-    slept:"sleep", read:"read", ran:"run", drank:"drink", spoke:"speak", left:"leave"};
-  const w = v.toLowerCase();
-  if(irr[w]) return irr[w];
-  if(/ied$/.test(w)) return w.slice(0,-3) + "y";
-  if(/([^aeiou])\1ed$/.test(w)) return w.slice(0,-3);
-  if(/ed$/.test(w)) return w.slice(0,-2);
-  return w;
-}
-
-const RULES = [
-  {re:/\b(i)\s+is\b/i, to:"I am", why:"С «I» всегда «am»."},
-  {re:/\b(he|she|it|who)\s+have\b/i, to:(m)=>m[1]+" has", why:"У he / she / it — «has»."},
-  {re:/\b(he|she|it)\s+don'?t\b/i, to:(m)=>m[1]+" doesn't", why:"У he / she / it — «doesn't»."},
-  {re:/\b(i|we|you|they)\s+doesn'?t\b/i, to:(m)=>m[1]+" don't", why:"«Doesn't» только с he / she / it."},
-  {re:/\bi\s+(?:am|'m)\s+agree\b/i, to:"I agree", why:"«Agree» — это глагол, «am» лишний."},
-  {re:/\bi\s+(?:am|'m)\s+(\d{1,2})\s*(?:years?\s*old)?\b/i, to:(m)=>"I'm "+m[1], why:"Возраст: «I'm 16», без «have»."},
-  {re:/\bi\s+have\s+(\d{1,2})\s*years?\b/i, to:(m)=>"I'm "+m[1], why:"По-английски возраст — «I am 16», а не «I have»."},
-  {re:/\bfeel\s+myself\s+(\w+)/i, to:(m)=>"feel "+m[1], why:"«Myself» не нужно: «I feel good»."},
-  {re:/\b(i|we|they|you)\s+very\s+(like|love|want|need)\b/i, to:(m)=>m[1]+" really "+m[2], why:"Перед глаголом — «really», не «very»."},
-  {re:/\b(i'?m|i am|he'?s|she'?s|is|are)\s+interesting\s+in\b/i, to:(m)=>m[1]+" interested in", why:"Человеку интересно — «interested in»; «interesting» — про сам предмет."},
-  {re:/\bi\s+(?:am|'m)\s+boring\b/i, to:"I'm bored", why:"«I'm boring» = «я скучный». Скучно вам — «bored»."},
-  {re:/\bgood\s+in\s+(\w+)/i, to:(m)=>"good at "+m[1], why:"«Good at» — хорошо получается."},
-  {re:/\bdepends?\s+(?:from|of)\b/i, to:"depends on", why:"Только «depend on»."},
-  {re:/\bafraid\s+from\b/i, to:"afraid of", why:"«Afraid of»."},
-  {re:/\bmarried\s+with\b/i, to:"married to", why:"«Married to somebody»."},
-  {re:/\blisten\s+(music|me|him|her|them|radio)\b/i, to:(m)=>"listen to "+m[1], why:"«Listen» всегда с «to»."},
-  {re:/\bexplain\s+(me|him|her|us|them)\b/i, to:(m)=>"explain to "+m[1], why:"«Explain to me»."},
-  {re:/\bsay\s+(me|him|her|us|them)\b/i, to:(m)=>"tell "+m[1], why:"«Tell me», а «say» — без человека: «say something»."},
-  {re:/\bmake\s+(?:a\s+)?photo\b/i, to:"take a photo", why:"Фото «take», не «make»."},
-  {re:/\b(informations|advices|moneys|knowledges)\b/i,
-   to:(m)=>({informations:"information",advices:"advice",moneys:"money",knowledges:"knowledge"})[m[1].toLowerCase()],
-   why:"Это неисчисляемые слова — без «-s»."},
-  {re:/\bpeoples\b/i, to:"people", why:"«People» уже множественное число."},
-  {re:/\bmuch\s+(people|friends|books|students|things|years)\b/i, to:(m)=>"many "+m[1], why:"С исчисляемыми — «many»."},
-  {re:/\bmore\s+(better|easier|worse|older|younger|bigger|harder)\b/i, to:(m)=>m[1], why:"«Better» уже сравнение, «more» лишнее."},
-  {re:/\bi\s+no\s+(like|want|have|know|understand)\b/i, to:(m)=>"I don't "+m[1], why:"Отрицание — «don't + глагол»."},
-  {re:/\bdidn'?t\s+(\w+)/i, to:(m)=>{const b=base(m[1]); return b===m[1].toLowerCase() ? m[0] : "didn't "+b;},
-   why:"После «didn't» — первая форма глагола."},
-  {re:/\b(want|need|try|plan|hope|decide|learn|would like|forget|promise)\s+(go|be|see|do|eat|buy|play|study|watch|read|come|make|take|visit|help|start|speak|learn|travel|live|work)\b/i,
-   to:(m)=>m[1]+" to "+m[2], why:"После этих глаголов нужна частица «to»."},
-  {re:/\b(where|what|when|why|how)\s+(you|we|they)\s+(?!are|is|am|was|were|can|could|will|would|do|did|does|have|has|should|must|'re|'ve)(\w+)/i,
-   to:(m)=>m[1]+" do "+m[2]+" "+m[3], why:"В вопросе нужен «do»: «Where do you live?»"},
-  {re:/\b(where|what|when|why|how)\s+(he|she|it)\s+(?!are|is|am|was|were|can|could|will|would|did|does|have|has|should|must|'s)(\w+)/i,
-   to:(m)=>m[1]+" does "+m[2]+" "+base(m[3]), why:"В вопросе с he / she — «does»."},
-  {re:/\bhow\s+you\s+are\b/i, to:"how are you", why:"В вопросе порядок слов меняется: «How are you?»"},
-  {re:/\b(he|she|my (?:mother|father|friend|brother|sister|teacher))\s+(like|love|want|need|live|work|play|study|know|think|say|go|watch|read|speak|help|look|feel)\b/i,
-   to:(m)=>m[1]+" "+third(m[2]), why:"У he / she в present simple глагол с «-s»."},
-  {re:/\b(i'?m|i am|he'?s|she'?s|he is|she is)\s+(student|teacher|doctor|engineer|driver|nurse|programmer|schoolboy|schoolgirl|pupil)\b/i,
-   to:(m)=>m[1]+" a "+m[2], why:"Перед профессией нужен артикль «a»."},
-  {re:/\bsince\s+(\d+|two|three|four|five|six|ten)\s+(years?|months?|weeks?|days?|hours?)\b/i,
-   to:(m)=>"for "+m[1]+" "+m[2], why:"Длительность — «for two years»; «since» — с датой."},
-  {re:/\bhow\s+much\s+time\s+(do|does|did|are|is|have|has)\b/i, to:(m)=>"how long "+m[1], why:"«How long» — сколько времени."},
-  {re:/\bon\s+the\s+(photo|picture|foto)\b/i, to:(m)=>"in the "+(m[1].toLowerCase()==="foto"?"photo":m[1]), why:"«In the photo»."},
-  {re:/\bin\s+the\s+last\s+time\b/i, to:"recently", why:"«Recently» или «lately»."},
-  {re:/\bi\s+(?:am|'m)\s+(?:go|going)\s+to\s+home\b/i, to:"I'm going home", why:"«Home» без «to»."},
-  {re:/\bthanks?\s+god\b/i, to:"thank God", why:"Устойчивое «thank God»."}
+const LOCAL_RULES = [
+  { re:/\bi\s+is\b/i,            fix:(s)=>s.replace(/\bi\s+is\b/ig,"I am"),        why:"После I всегда am: I am." },
+  { re:/\bi\s+have\s+(\d{1,2})\s+years?(\s+old)?\b/i,
+    fix:(s)=>s.replace(/\bi\s+have\s+(\d{1,2})\s+years?(\s+old)?\b/ig,"I am $1 years old"),
+    why:"Возраст по-английски с глаголом be: I am 14 years old." },
+  { re:/\bi\s+have\s+(\d{1,2})\s*[.!?]?\s*$/i,
+    fix:(s)=>s.replace(/\bi\s+have\s+(\d{1,2})\s*[.!?]?\s*$/i,"I am $1 years old"),
+    why:"О возрасте говорят через be: I am 14 years old." },
+  { re:/\bi\s+from\b/i,          fix:(s)=>s.replace(/\bi\s+from\b/ig,"I am from"),  why:"После I нужен глагол am: I am from Moscow." },
+  { re:/\b(he|she|it)\s+have\b/i,fix:(s)=>s.replace(/\b(he|she|it)\s+have\b/ig,(m,p)=>p+" has"), why:"С he, she, it — has: He has a dog." },
+  { re:/\bi\s+no\s+like\b/i,     fix:(s)=>s.replace(/\bi\s+no\s+like\b/ig,"I don't like"), why:"Отрицание строится с don't: I don't like." },
+  { re:/\b(my\s+favourite\s+subject|my\s+favorite\s+subject)\s+are\b/i,
+    fix:(s)=>s.replace(/\s+are\b/i," is"), why:"Подлежащее одно — нужен is: My favourite subject is maths." },
+  { re:/\bi\s+am\s+agree\b/i,    fix:(s)=>s.replace(/\bi\s+am\s+agree\b/ig,"I agree"), why:"Agree — это глагол: I agree." },
+  { re:/\bi\s+like\s+play\b/i,   fix:(s)=>s.replace(/\bi\s+like\s+play\b/ig,"I like playing"), why:"После like обычно -ing: I like playing football." },
+  { re:/\bi\s+very\s+like\b/i,   fix:(s)=>s.replace(/\bi\s+very\s+like\b/ig,"I like … very much"), why:"Very much ставится в конце: I like it very much." },
+  { re:/\bdon't\s+(has|likes)\b/i, fix:(s)=>s.replace(/\bdon't\s+has\b/ig,"don't have").replace(/\bdon't\s+likes\b/ig,"don't like"), why:"После don't — начальная форма глагола." }
 ];
 
-function tidy(t){
-  const s = String(t).replace(/\bi\b/g, "I").trim();
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function checkText(text){
-  for(const r of RULES){
-    const m = text.match(r.re);
-    if(!m) continue;
-    const better = typeof r.to === "function" ? r.to(m) : m[0].replace(r.re, r.to);
-    if(!better || better.toLowerCase() === m[0].toLowerCase()) continue;
-    return {was:tidy(m[0]), better:tidy(better), why:r.why};
-  }
-  return null;
-}
-
 /* ============================================================
-   3. Локальный собеседник
+   3. СОСТОЯНИЕ
    ============================================================ */
-/* когда сценарий темы закончился — разговор не обрывается */
-const FILLERS = [
-  "So what else is going on today?",
-  "Tell me something you did this week.",
-  "What's the best thing that happened to you recently?",
-  "Is there anything you're looking forward to?",
-  "What would you do with a free afternoon?",
-  "Who did you talk to today?",
-  "What's something new you learned lately?"
-];
-const FILLER_HINTS = ["Not much, really.","I had a busy week.","Let me think …"];
-
-const REACT = {
-  pos:["That's great.","Nice one.","Oh cool.","Awesome.","I like that.","Sounds good."],
-  neg:["Oh, that's a shame.","Sorry to hear that.","Yeah, that happens.","Hmm, not fun."],
-  flat:["Got it.","Okay, nice.","Right.","Mm-hm.","Fair enough.","I see."],
-  more:["Can you tell me a bit more?","Say it in a full sentence — I want to hear more.","Yeah? Go on.","And why is that?"],
-  praise:["Nice sentence!","That sounded natural.","Good one — clear and correct.","Well said."]
-};
-const pick = a => a[Math.floor(Math.random()*a.length)];
-
-function sentiment(t){
-  if(/\b(hate|bad|boring|bored|tired|sad|sick|difficult|hard|terrible|awful|angry|don'?t like|too much)\b/i.test(t)) return "neg";
-  if(/\b(like|love|good|great|fun|funny|happy|nice|best|favourite|favorite|cool|awesome|yes|sure)\b/i.test(t)) return "pos";
-  return "flat";
-}
-function wordCount(t){ return t.trim().split(/\s+/).filter(Boolean).length; }
-function isRussian(t){ return /[\u0400-\u04FF]/.test(t); }
-
-function grabName(t){
-  const m = t.match(/(?:my name is|i am|i'?m|call me|this is)\s+([A-Za-z][A-Za-z'-]{1,18})/i)
-         || t.match(/^([A-Za-z][A-Za-z'-]{1,18})[.! ]*$/);
-  if(!m) return "";
-  const n = m[1];
-  if(/^(a|the|from|fine|good|ok|okay|hi|hello|student|sorry)$/i.test(n)) return "";
-  return n.charAt(0).toUpperCase() + n.slice(1).toLowerCase();
-}
-
-function fill(text){
-  return text.replace(/\{name\}/g, state.name ? ", " + state.name : "");
-}
-function script(){ return SCRIPTS[state.topic.key] || SCRIPTS.free; }
-
-function localOpener(){
-  state.step = 0;
-  state.nudged = false;
-  return {reply: fill(script()[0].ask), correction:null, suggestions: script()[0].suggest};
-}
-
-function localTurn(text){
-  const turns = script();
-  const cur = turns[Math.min(state.step, turns.length-1)];
-  const hints = state.done ? FILLER_HINTS : cur.suggest;
-
-  if(isRussian(text)){
-    return {reply:"Let's try that in English. Even a short sentence is fine.",
-            correction:null, suggestions:hints};
-  }
-
-  if(state.step === 0 && !state.name) state.name = grabName(text);
-  const correction = checkText(text);
-
-  // очень короткий ответ: остаёмся на том же вопросе и просим сказать больше
-  if(wordCount(text) < 3 && !state.nudged){
-    state.nudged = true;
-    return {reply: pick(REACT.more), correction, suggestions:hints};
-  }
-  state.nudged = false;
-
-  // реакция на слова ученика
-  let react = "";
-  for(const h of (cur.hear || [])) if(h.re.test(text)){ react = h.say; break; }
-  if(!react) react = pick(REACT[sentiment(text)]);
-  if(state.level === "A1" && react.length > 24) react = pick(REACT.flat);
-
-  // следующий вопрос
-  let ask;
-  if(state.done){
-    ask = pick(FILLERS);
-  }else{
-    state.step++;
-    if(state.step >= turns.length){
-      state.done = true;
-      ask = "That was a good chat — your English got smoother as we went. We can keep talking, or pick another topic.";
-    }else{
-      ask = fill(turns[state.step].ask);
-    }
-  }
-
-  // «Got it. Got it, nice…» — не начинаем вопрос тем же словом, что и реакцию
-  if(/^(nice|okay|ok|right|got it|sure|great|perfect|cool|awesome|good|so)\b/i.test(ask)) react = "";
-
-  const praise = !correction && wordCount(text) >= 5 && Math.random() < 0.4;
-  return {reply: (react ? react + " " : "") + ask,
-          correction,
-          suggestions: state.done ? FILLER_HINTS : turns[state.step].suggest,
-          praise};
-}
-
-/* ============================================================
-   4. Режим ИИ (по желанию, через прокси)
-   ============================================================ */
-const conn = {proxyUrl:"", apiKey:""};
-function connReady(){ return !!(conn.proxyUrl || conn.apiKey); }
-function connError(msg){ const e = new Error(msg); e.setup = true; return e; }
-
-function transport(){
-  const headers = {"Content-Type":"application/json"};
-  if(conn.proxyUrl) return {kind:"proxy", url:conn.proxyUrl, headers, model:"claude-haiku-4-5"};
-  if(conn.apiKey){
-    headers["x-api-key"] = conn.apiKey;
-    headers["anthropic-version"] = "2023-06-01";
-    headers["anthropic-dangerous-direct-browser-access"] = "true";
-    return {kind:"key", url:"https://api.anthropic.com/v1/messages", headers, model:"claude-haiku-4-5"};
-  }
-  return {kind:"none", url:"https://api.anthropic.com/v1/messages", headers, model:"claude-sonnet-4-6"};
-}
-
-function systemPrompt(){
-  return `You are Alex, a friendly 24-year-old native English speaker from Chicago, chatting with a Russian student who is practising spoken English. You are a real person in conversation, not a teacher and not an AI.
-
-Student's level: ${state.level}. Topic: ${state.topic.ru} (${state.topic.key}).
-
-Rules: 1-3 short sentences per turn. React to what they said, then ask one easy question. Contractions and natural reactions. Plain speakable text, no emoji or lists. The text comes from speech recognition, so ignore punctuation, capitalisation and spelling. Correct at most one thing per turn, only what matters for being understood, never inside your spoken reply.
-
-Answer with only JSON: {"reply":"...","correction":{"was":"...","better":"...","why":"по-русски"},"suggestions":["...","..."]}
-Use null for correction when nothing needs fixing.`;
-}
-
-async function askAlex(userText){
-  const messages = state.history.concat(userText === null ? [] : [{role:"user", content:userText}]);
-  const t = transport();
-  let res;
-  try{
-    res = await fetch(t.url, {
-      method:"POST", headers:t.headers,
-      body: JSON.stringify({model:t.model, max_tokens:1000, system:systemPrompt(), messages})
-    });
-  }catch{
-    throw connError(t.kind === "none"
-      ? "Браузер заблокировал запрос к api.anthropic.com. Нужен прокси — откройте «Настройки»."
-      : "Нет связи с сервером. Проверьте интернет и адрес прокси.");
-  }
-  if(!res.ok){
-    let detail = "";
-    try{ detail = (await res.json()).error?.message || ""; }catch{}
-    if(res.status === 401 || res.status === 403) throw connError("Ключ не принят (" + res.status + "). " + detail);
-    if(res.status === 429) throw connError("Слишком много запросов. Подождите минуту.");
-    throw new Error("HTTP " + res.status + " " + detail);
-  }
-  const data = await res.json();
-  const raw = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("\n").trim();
-  let parsed;
-  try{
-    parsed = JSON.parse(raw.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim());
-  }catch{
-    const m = raw.match(/\{[\s\S]*\}/);
-    parsed = m ? JSON.parse(m[0]) : {reply:raw, correction:null, suggestions:[]};
-  }
-  if(!parsed.reply) parsed.reply = "Sorry, say that again?";
-  if(userText !== null) state.history.push({role:"user", content:userText});
-  state.history.push({role:"assistant", content:parsed.reply});
-  return parsed;
-}
-
-/* ============================================================
-   5. Состояние
-   ============================================================ */
+const LS_KEY = "englishPractice.geminiKey";
 const state = {
-  engine:"local",
+  apiKey: "",
   topic: TOPICS[0],
-  level:"A2",
-  step:0, nudged:false, done:false, name:"",
-  history:[], mistakes:[],
-  voiceOn:true, handsFree:false, rate:LEVELS.A2.rate, voiceName:"",
-  started:false, busy:false, listening:false
+  history: [],          // [{role:'user'|'model', text}] — максимум 10 реплик
+  demoStep: 0,
+  isRecording: false,
+  recognition: null,
+  recTimer: null,
+  soundOn: true,
+  rate: 0.85,
+  autoMic: false,
+  lastTutorLine: "",
+  audioUnlocked: false,
+  pendingSpeech: null,
+  busy: false,
+  micBlocked: false
 };
-const $ = id => document.getElementById(id);
-const transcript = $("transcript");
 
 /* ============================================================
-   6. Отрисовка
+   4. КОРОТКИЕ ХЕЛПЕРЫ DOM (только textContent — без innerHTML)
    ============================================================ */
-function scroll(){ transcript.scrollTop = transcript.scrollHeight; }
+const $ = (id) => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined && text !== null) n.textContent = text;
+  return n;
+}
+function announce(msg){ $("srStatus").textContent = msg; }
 
-function addBubble(who, text){
-  const div = document.createElement("div");
-  div.className = "bubble " + (who === "alex" ? "alex" : "me");
-  const label = document.createElement("span");
-  label.className = "who";
-  label.textContent = who === "alex" ? "Алекс" : "Вы";
-  div.appendChild(label);
-  div.appendChild(document.createTextNode(text));
-  if(who === "alex"){
-    const say = document.createElement("button");
-    say.className = "say";
-    say.setAttribute("aria-label","Прослушать снова");
-    say.textContent = "🔊";
-    say.onclick = () => speak(text);
-    div.appendChild(say);
+const chat = $("chat");
+function scrollChat(){ chat.scrollTop = chat.scrollHeight; }
+
+/* ---- сообщения чата ---- */
+function addTutor(text){
+  const wrap = el("div","msg tutor");
+  wrap.appendChild(el("div","who","Alex, тьютор"));
+  const row = el("div","bubble-row");
+  row.appendChild(el("div","bubble",text));
+  const say = el("button","icon-btn","🔊");
+  say.type = "button";
+  say.setAttribute("aria-label","Озвучить реплику тьютора");
+  say.addEventListener("click",()=>speak(text));
+  row.appendChild(say);
+  wrap.appendChild(row);
+  chat.appendChild(wrap);
+  scrollChat();
+}
+function addLearner(text){
+  const wrap = el("div","msg learner");
+  wrap.appendChild(el("div","who","Ты"));
+  wrap.appendChild(el("div","bubble",text));
+  chat.appendChild(wrap);
+  scrollChat();
+}
+function addSystem(text, bad){
+  const wrap = el("div","msg system" + (bad ? " bad" : ""));
+  wrap.appendChild(el("div","bubble",text));
+  chat.appendChild(wrap);
+  scrollChat();
+  return wrap;
+}
+function addTyping(){
+  const wrap = el("div","msg tutor");
+  wrap.appendChild(el("div","who","Alex думает…"));
+  const b = el("div","bubble");
+  const t = el("span","typing");
+  t.appendChild(el("i")); t.appendChild(el("i")); t.appendChild(el("i"));
+  b.appendChild(t);
+  wrap.appendChild(b);
+  chat.appendChild(wrap);
+  scrollChat();
+  return wrap;
+}
+
+/* ---- карточка обратной связи ---- */
+function addFeedback(corr, tip){
+  if (!corr) return;
+  const needs = corr.status === "needs_improvement" && corr.improved;
+  const card = el("div","feedback" + (needs ? " fix" : ""));
+  if (!needs){
+    card.appendChild(el("div","head","Отлично! Фраза понятна и звучит естественно."));
+    if (corr.original) card.appendChild(el("div","good",corr.original));
+  } else {
+    card.appendChild(el("div","head","Почти! Смотри, как лучше:"));
+    if (corr.original) card.appendChild(el("div","orig",corr.original));
+    card.appendChild(el("div","good",corr.improved));
+    if (corr.explanation_ru) card.appendChild(el("div","why",corr.explanation_ru));
   }
-  transcript.appendChild(div);
-  scroll();
-}
-
-function addCorrection(c){
-  const div = document.createElement("div");
-  div.className = "fix";
-  const head = document.createElement("div");
-  head.className = "fix-head";
-  head.textContent = "Так звучит правильнее";
-  const was = document.createElement("span");
-  was.className = "was";
-  was.textContent = c.was || "";
-  const better = document.createElement("span");
-  better.className = "better";
-  better.textContent = c.better || "";
-  const say = document.createElement("button");
-  say.className = "say";
-  say.setAttribute("aria-label","Прослушать правильный вариант");
-  say.textContent = "🔊";
-  say.onclick = () => speak(c.better);
-  better.appendChild(say);
-  const why = document.createElement("div");
-  why.className = "why";
-  why.textContent = c.why || "";
-  div.append(head, was, better, why);
-  transcript.appendChild(div);
-  state.mistakes.push(c);
-  renderMistakes();
-  saveSettings();
-  scroll();
-}
-
-function addPraise(){
-  const div = document.createElement("div");
-  div.className = "praise";
-  div.textContent = pick(REACT.praise);
-  transcript.appendChild(div);
-  scroll();
-}
-
-function renderMistakes(){
-  $("mistakeCount").textContent = state.mistakes.length;
-  const box = $("mistakeList");
-  if(!state.mistakes.length){
-    box.innerHTML = '<p class="none">Пока ошибок нет — говорите смелее.</p>';
-    return;
+  if (tip && tip.tip_ru){
+    const t = el("div","tip", (tip.word ? tip.word + " — " : "") + tip.tip_ru);
+    card.appendChild(t);
   }
-  const ol = document.createElement("ol");
-  state.mistakes.slice(-25).forEach(c => {
-    const li = document.createElement("li");
-    const was = document.createElement("span");
-    was.className = "was";
-    was.textContent = c.was || "";
-    li.append(was, document.createTextNode(" → " + (c.better || "")));
-    if(c.why){
-      const why = document.createElement("div");
-      why.style.color = "var(--ink-soft)";
-      why.textContent = c.why;
-      li.appendChild(why);
-    }
-    ol.appendChild(li);
-  });
-  box.innerHTML = "";
-  box.appendChild(ol);
-}
-
-function renderSuggestions(list){
-  const box = $("suggestions");
-  box.innerHTML = "";
-  (list || []).slice(0,4).forEach(s => {
-    if(!s) return;
-    const b = document.createElement("button");
-    b.className = "sug";
-    b.textContent = s;
-    b.onclick = () => { if(!/…|\.\.\./.test(s)) send(s); else { $("typed").value = s.replace(/…|\.\.\./g,""); $("typed").focus(); } };
-    box.appendChild(b);
-  });
-}
-
-function showFailure(retry, err){
-  const div = document.createElement("div");
-  div.className = "failed";
-  div.appendChild(document.createTextNode((err && err.message) || "Алекс не ответил."));
-  const row = document.createElement("div");
-  if(err && err.setup){
-    const s = document.createElement("button");
-    s.textContent = "Настройки";
-    s.onclick = () => openPanel("settings", true);
-    row.appendChild(s);
+  const acts = el("div","acts");
+  const phrase = needs ? corr.improved : (corr.original || "");
+  if (phrase){
+    const b = el("button","icon-btn","🔊 Повторить правильный вариант");
+    b.type = "button";
+    b.setAttribute("aria-label","Озвучить правильный вариант фразы");
+    b.addEventListener("click",()=>speak(phrase));
+    acts.appendChild(b);
+    const use = el("button","icon-btn","✍️ Подставить в поле");
+    use.type = "button";
+    use.setAttribute("aria-label","Подставить правильный вариант в поле ввода");
+    use.addEventListener("click",()=>fillInput(phrase));
+    acts.appendChild(use);
   }
-  const b = document.createElement("button");
-  b.textContent = "Повторить";
-  b.onclick = () => { div.remove(); retry(); };
-  row.appendChild(b);
-  div.appendChild(row);
-  transcript.appendChild(div);
-  scroll();
-}
-
-function setStatus(text, live){
-  $("status").textContent = text;
-  $("status").classList.toggle("live", !!live);
+  if (tip && tip.word){
+    const w = el("button","icon-btn","🔊 " + tip.word);
+    w.type = "button";
+    w.setAttribute("aria-label","Озвучить слово " + tip.word);
+    w.addEventListener("click",()=>speak(tip.word));
+    acts.appendChild(w);
+  }
+  card.appendChild(acts);
+  chat.appendChild(card);
+  scrollChat();
 }
 
 /* ============================================================
-   7. Ход разговора
+   5. ОЗВУЧКА (TTS)
    ============================================================ */
-function render(out){
-  if(out.correction && out.correction.better) addCorrection(out.correction);
-  if(out.praise) addPraise();
-  addBubble("alex", out.reply);
-  renderSuggestions(out.suggestions);
-  speak(out.reply, () => { if(state.handsFree && state.started && !state.busy) startListening(); });
-}
-
-async function send(text, isRetry){
-  if(state.busy || !state.started) return;
-  const t = (text || "").trim();
-  if(!t) return;
-  if(!isRetry) addBubble("me", t);
-  renderSuggestions([]);
-
-  if(state.engine === "local"){
-    const out = localTurn(t);           // синхронно: iOS разрешает речь сразу после касания
-    render(out);
-    setStatus(state.done ? "Тема пройдена — можно продолжать или выбрать другую." : "Ваша очередь.");
-    return;
-  }
-
-  state.busy = true; lockInput(true); setStatus("Отправляю Алексу…");
-  try{
-    render(await askAlex(t));
-    setStatus("Ваша очередь.");
-  }catch(err){
-    showFailure(() => send(t, true), err);
-    setStatus("Ошибка связи.");
-  }finally{
-    state.busy = false; lockInput(false);
-  }
-}
-
-async function startConversation(){
-  unlockVoice();
-  $("empty")?.remove();
-  state.started = true; state.done = false; state.history = []; state.name = "";
-  lockInput(false);
-
-  if(state.engine === "local"){
-    render(localOpener());
-    setStatus(speechSupported ? "Нажмите микрофон и отвечайте." : "Отвечайте текстом.");
-    return;
-  }
-  state.busy = true; lockInput(true); setStatus("Алекс начинает…");
-  try{
-    render(await askAlex("[The student just opened the app. Greet them and start the conversation.]"));
-    setStatus("Ваша очередь.");
-  }catch(err){
-    showFailure(startConversation, err);
-    setStatus("Не удалось начать.");
-  }finally{
-    state.busy = false; lockInput(false);
-  }
-}
-
-function resetConversation(){
-  stopSpeaking();
-  if(state.listening && recognition) recognition.abort();
-  state.started = false; state.step = 0; state.done = false; state.nudged = false; state.history = [];
-  transcript.innerHTML = "";
-  renderSuggestions([]);
-  const empty = document.createElement("div");
-  empty.className = "empty";
-  empty.id = "empty";
-  empty.innerHTML = "Тема: <b>" + state.topic.ru + "</b><br>Нажмите кнопку — Алекс заговорит первым.";
-  const btn = document.createElement("button");
-  btn.className = "start-btn";
-  btn.textContent = "Начать разговор";
-  btn.onclick = startConversation;
-  empty.appendChild(btn);
-  transcript.appendChild(empty);
-  setStatus("Готово к разговору.");
-  lockInput(false);
-}
-
-function lockInput(locked){
-  const ready = state.started && !locked;
-  $("typed").disabled = !ready;
-  $("sendBtn").disabled = !ready;
-  $("micBtn").disabled = !ready || !speechSupported;
-}
-
-/* ============================================================
-   8. Голос Алекса — Web Speech, встроенный в iOS
-   ============================================================ */
-let voices = [], chosenVoice = null, voiceUnlocked = false;
-
-/* Чем «живее» голос, тем выше оценка. Роботные системные голоса уходят в минус. */
-function scoreVoice(v){
-  const n = v.name || "", l = v.lang || "";
-  let sc = 0;
-  if(/enhanced|premium|siri|neural|natural/i.test(n)) sc += 7;
-  if(/^(ava|zoe|allison|susan|joelle|evan|nathan|samantha|serena|nicky|aaron|isha|oliver)/i.test(n)) sc += 3;
-  if(/google (us|uk) english/i.test(n)) sc += 5;
-  if(/microsoft (aria|jenny|guy|michelle|ana|christopher)/i.test(n)) sc += 5;
-  if(/^en[-_]US/i.test(l)) sc += 2;
-  if(/^en[-_](GB|AU|CA|IE)/i.test(l)) sc += 1;
-  if(/compact|eloquence|fred|albert|whisper|zarvox|trinoids|bells|bahh|boing|bubbles|cellos|jester|organ|superstar|wobble|grandma|grandpa|rocko|shelley|sandy|flo/i.test(n)) sc -= 9;
-  return sc;
-}
-
-function englishVoices(){
-  return voices.filter(v => /^en[-_]/i.test(v.lang || ""))
-               .sort((a,b) => scoreVoice(b) - scoreVoice(a));
-}
+let voices = [];
+let chosenVoice = null;
+const synth = window.speechSynthesis || null;
 
 function loadVoices(){
-  if(!window.speechSynthesis) return;
-  voices = speechSynthesis.getVoices() || [];
-  const en = englishVoices();
-  chosenVoice = (state.voiceName && en.find(v => v.name === state.voiceName)) || en[0] || null;
-  fillVoiceList();
+  if (!synth) return;
+  voices = synth.getVoices() || [];
+  chosenVoice =
+    voices.find(v => v.lang === "en-US" && /google|samantha|aaron|nicky/i.test(v.name)) ||
+    voices.find(v => v.lang === "en-US") ||
+    voices.find(v => v.lang === "en-GB") ||
+    voices.find(v => /^en(-|_)/i.test(v.lang)) || null;
 }
-if(window.speechSynthesis){
+if (synth){
   loadVoices();
-  speechSynthesis.addEventListener?.("voiceschanged", loadVoices);
-  speechSynthesis.onvoiceschanged = loadVoices;
+  synth.onvoiceschanged = loadVoices;           // голоса приходят асинхронно
+  setTimeout(loadVoices, 400);
+  setTimeout(loadVoices, 1500);
 }
 
-function fillVoiceList(){
-  const sel = $("voiceSel");
-  if(!sel) return;
-  const en = englishVoices();
-  if(!en.length){ sel.innerHTML = '<option value="">голоса ещё не загрузились — коснитесь экрана</option>'; return; }
-  sel.innerHTML = "";
-  en.forEach(v => {
-    const o = document.createElement("option");
-    o.value = v.name;
-    o.textContent = v.name + " · " + v.lang + (scoreVoice(v) >= 6 ? " ★" : "");
-    if(chosenVoice && v.name === chosenVoice.name) o.selected = true;
-    sel.appendChild(o);
-  });
+function speak(text){
+  if (!text) return;
+  if (!state.soundOn || !synth) return;
+  if (!state.audioUnlocked){                    // iOS: нужен жест пользователя
+    state.pendingSpeech = text;
+    return;
+  }
+  if (!chosenVoice) loadVoices();
+  try{
+    synth.cancel();                             // чтобы реплики не наложились
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = (chosenVoice && chosenVoice.lang) || "en-US";
+    if (chosenVoice) u.voice = chosenVoice;
+    u.rate = state.rate;
+    u.pitch = 1;
+    synth.speak(u);
+  }catch(e){ /* озвучка не критична для работы приложения */ }
 }
 
-/* iOS проигрывает речь только после касания: первое касание «открывает»
-   синтезатор пустой фразой и подгружает список голосов. */
-function unlockVoice(){
-  if(voiceUnlocked || !window.speechSynthesis) return;
+/* Разблокировка аудио первым жестом (требование Safari/iOS) */
+function unlockAudio(){
+  if (state.audioUnlocked || !synth) return;
   try{
     const u = new SpeechSynthesisUtterance(" ");
     u.volume = 0;
-    speechSynthesis.speak(u);
-    voiceUnlocked = true;
+    synth.speak(u);
+    state.audioUnlocked = true;
     loadVoices();
-  }catch{}
+    if (state.pendingSpeech){
+      const t = state.pendingSpeech;
+      state.pendingSpeech = null;
+      setTimeout(()=>speak(t), 120);
+    }
+  }catch(e){ state.audioUnlocked = true; }
 }
-document.addEventListener("touchend", unlockVoice, {once:true, passive:true});
-document.addEventListener("mousedown", unlockVoice, {once:true});
-
-function setTalking(on){
-  $("char").classList.toggle("talking", !!on);
-}
-
-function stopSpeaking(){
-  if(window.speechSynthesis) speechSynthesis.cancel();
-  setTalking(false);
-}
-
-/* Живая речь: фраза дробится на смысловые куски, у каждого свой темп,
-   высота и пауза после него — так исчезает «диктор автоответчика». */
-function clauses(text){
-  const raw = [];
-  let buf = "";
-  for(const ch of String(text).replace(/\s+/g," ")){
-    buf += ch;
-    if(/[.!?,;:—]/.test(ch)){ raw.push(buf.trim()); buf = ""; }
-  }
-  if(buf.trim()) raw.push(buf.trim());
-  const out = [];
-  for(const c of raw){
-    const short = c.split(" ").length < 3;
-    if(out.length && (short || out[out.length-1].split(" ").length < 3)) out[out.length-1] += " " + c;
-    else out.push(c);
-  }
-  return out.length ? out : [String(text)];
-}
-
-function speak(text, done){
-  if(!window.speechSynthesis || !state.voiceOn){ if(done) done(); return; }
-  const parts = clauses(String(text).replace(/[*_#]/g,""));
-  const run = () => {
-    speechSynthesis.cancel();
-    speechSynthesis.resume();
-    if(!chosenVoice) loadVoices();
-    setTalking(true);
-    let i = 0;
-    const next = () => {
-      if(i >= parts.length){ setTalking(false); if(done) done(); return; }
-      const part = parts[i++];
-      const u = new SpeechSynthesisUtterance(part);
-      if(chosenVoice){ u.voice = chosenVoice; u.lang = chosenVoice.lang; } else u.lang = "en-US";
-      const ask = /\?$/.test(part), excl = /!$/.test(part), longer = part.split(" ").length > 9;
-      u.rate  = state.rate * (ask ? 0.97 : 1) * (longer ? 1.02 : 1) * (0.98 + Math.random()*0.04);
-      u.pitch = (ask ? 1.09 : excl ? 1.05 : 1.0) + (Math.random()*0.06 - 0.03);
-      u.volume = 1;
-      u.onend = () => setTimeout(next, /[.!?]$/.test(part) ? 250 : 120);
-      u.onerror = () => setTimeout(next, 60);
-      speechSynthesis.speak(u);
-    };
-    next();
-  };
-  if(IOS && justListened){ justListened = false; setTimeout(run, 300); }
-  else run();
-}
+document.addEventListener("pointerdown", unlockAudio, { once:false });
+document.addEventListener("keydown", unlockAudio, { once:false });
 
 /* ============================================================
-   9. Микрофон — диктовка iOS через webkitSpeechRecognition
+   6. РАСПОЗНАВАНИЕ РЕЧИ
+   Главное правило: на каждое нажатие — НОВЫЙ объект распознавания.
    ============================================================ */
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-const speechSupported = !!SR;
-let recognition = null, justListened = false;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
-function startListening(){
-  if(!speechSupported || state.busy || state.listening) return;
-  stopSpeaking();
-  recognition = new SR();
-  recognition.lang = "en-US";
-  recognition.continuous = false;      // iOS всё равно останавливается после паузы
-  recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  let final = "";
+const micBtn = $("micBtn"), micIcon = $("micIcon"), micLabel = $("micLabel");
 
-  recognition.onstart = () => {
-    state.listening = true;
-    $("micBtn").classList.add("on");
-    $("char").classList.add("listening");
-    $("earcue").hidden = false;
-    setStatus("Слушаю… говорите по-английски", true);
-  };
-  recognition.onresult = e => {
-    let interim = "";
-    for(let i = e.resultIndex; i < e.results.length; i++){
-      const r = e.results[i];
-      if(r.isFinal) final += r[0].transcript + " ";
-      else interim += r[0].transcript;
-    }
-    if(interim) setStatus("…" + interim, true);
-  };
-  recognition.onerror = e => {
-    const msg = {
-      "no-speech":"Не услышал речь. Нажмите микрофон и попробуйте снова.",
-      "audio-capture":"Микрофон занят другим приложением.",
-      "not-allowed":"Разрешите микрофон: «Настройки» → Safari → Микрофон.",
-      "service-not-allowed":"Включите диктовку: «Настройки» → Основные → Клавиатура → Диктовка.",
-      "network":"Диктовке нужен интернет."
-    }[e.error];
-    if(e.error !== "aborted") setStatus(msg || ("Ошибка микрофона: " + e.error));
-  };
-  recognition.onend = () => {
-    state.listening = false;
-    $("micBtn").classList.remove("on");
-    $("char").classList.remove("listening");
-    $("earcue").hidden = true;
-    recognition = null;
-    justListened = true;
-    const said = final.trim();
-    if(said) send(said);
-    else if(!state.busy) setStatus("Ваша очередь.");
-  };
-
-  try{ recognition.start(); }
-  catch{
-    state.listening = false;
-    $("micBtn").classList.remove("on");
-    $("char").classList.remove("listening");
-    $("earcue").hidden = true;
+function setMicUI(mode){
+  // mode: 'idle' | 'rec' | 'blocked'
+  if (mode === "rec"){
+    micBtn.classList.add("rec");
+    micBtn.disabled = false;
+    micIcon.textContent = "⏹";
+    micLabel.textContent = "Остановить запись";
+    micBtn.setAttribute("aria-label","Остановить запись");
+    setPill("pillMic","live","Микрофон","слушаю…");
+  } else if (mode === "blocked"){
+    micBtn.classList.remove("rec");
+    micBtn.disabled = true;
+    micIcon.textContent = "🚫";
+    micLabel.textContent = "Микрофон недоступен";
+    micBtn.setAttribute("aria-label","Микрофон недоступен, используй текстовый ввод");
+  } else {
+    micBtn.classList.remove("rec");
+    micBtn.disabled = false;
+    micIcon.textContent = "🎤";
+    micLabel.textContent = "Начать говорить";
+    micBtn.setAttribute("aria-label","Начать говорить по-английски");
+    setPill("pillMic","off","Микрофон","готов");
   }
 }
 
-function toggleMic(){
-  unlockVoice();
-  if(state.listening && recognition){ recognition.stop(); return; }
-  if(!speechSupported){
-    setStatus("Этот браузер не распознаёт речь. Откройте в Safari или Chrome, либо пишите текстом.");
+function cleanupRecognition(){
+  state.isRecording = false;
+  if (state.recTimer){ clearTimeout(state.recTimer); state.recTimer = null; }
+  if (state.recognition){
+    try{
+      state.recognition.onresult = null;
+      state.recognition.onerror = null;
+      state.recognition.onend = null;
+      state.recognition.onstart = null;
+    }catch(e){}
+    state.recognition = null;                   // ссылку обязательно отпускаем
+  }
+  setMicUI(state.micBlocked ? "blocked" : "idle");
+}
+
+const REC_ERRORS = {
+  "no-speech":     "Не услышал речь. Нажми «Начать говорить» и скажи фразу чуть громче.",
+  "not-allowed":   "Браузер не дал доступ к микрофону. Разреши микрофон в настройках сайта — или отвечай текстом.",
+  "service-not-allowed":"Браузер заблокировал сервис распознавания. Попробуй другой браузер или отвечай текстом.",
+  "audio-capture": "Микрофон не найден. Проверь, что он подключён и не занят другим приложением.",
+  "network":       "Нет связи с сервисом распознавания. Проверь интернет и попробуй снова.",
+  "aborted":       "Запись остановлена."
+};
+
+function startRecording(){
+  if (state.isRecording){ stopRecording(); return; }   // повторное нажатие = стоп
+  if (!SR){
+    addSystem("Этот браузер не умеет распознавать речь. Пиши ответ в поле ниже — всё остальное работает.", true);
     return;
   }
-  startListening();
-}
-
-/* ============================================================
-   10. Память настроек
-   ============================================================ */
-const store = {
-  async get(k){
-    if(window.storage){ try{ const r = await window.storage.get(k); if(r && r.value) return r.value; }catch{} }
-    try{ return localStorage.getItem(k); }catch{ return null; }
-  },
-  async set(k,v){
-    if(window.storage){ try{ await window.storage.set(k,v); return; }catch{} }
-    try{ localStorage.setItem(k,v); }catch{}
+  if (state.busy){
+    addSystem("Подожди секунду: тьютор ещё готовит ответ.");
+    return;
   }
-};
+  if (synth) { try{ synth.cancel(); }catch(e){} }       // не записываем свой же голос
 
-async function saveSettings(){
-  await store.set("practice:settings", JSON.stringify({
-    engine:state.engine, level:state.level, topic:state.topic.key,
-    voiceOn:state.voiceOn, handsFree:state.handsFree, rate:state.rate, voiceName:state.voiceName,
-    mistakes:state.mistakes.slice(-40),
-    proxyUrl:conn.proxyUrl, apiKey:conn.apiKey
-  }));
+  let rec;
+  try{ rec = new SR(); }                                // НОВЫЙ объект каждый раз
+  catch(e){
+    addSystem("Не удалось запустить распознавание речи. Отвечай текстом.", true);
+    return;
+  }
+  rec.lang = "en-US";
+  rec.continuous = false;                               // одна фраза за раз (надёжно и на iOS)
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  let finalText = "";
+
+  rec.onstart = () => {
+    state.isRecording = true;
+    setMicUI("rec");
+    announce("Микрофон слушает. Скажи фразу по-английски.");
+  };
+  rec.onresult = (ev) => {
+    let interim = "";
+    for (let i = ev.resultIndex; i < ev.results.length; i++){
+      const r = ev.results[i];
+      if (r.isFinal) finalText += r[0].transcript + " ";
+      else interim += r[0].transcript;
+    }
+    micLabel.textContent = (finalText || interim).trim().slice(0,40) || "Слушаю…";
+  };
+  rec.onerror = (ev) => {
+    const code = ev && ev.error ? ev.error : "unknown";
+    if (code === "not-allowed" || code === "service-not-allowed" || code === "audio-capture"){
+      state.micBlocked = true;
+      setPill("pillMic","warn","Микрофон","нет доступа");
+    }
+    if (code !== "aborted" || !finalText.trim()){
+      addSystem(REC_ERRORS[code] || "Распознавание прервалось. Попробуй ещё раз или напиши ответ.", code !== "no-speech" && code !== "aborted");
+    }
+  };
+  rec.onend = () => {                                   // финальная уборка — всегда
+    const said = finalText.trim();
+    cleanupRecognition();
+    if (said) handleLearnerInput(said, "voice");
+  };
+
+  state.recognition = rec;
+  try{
+    rec.start();
+    // страховка: если браузер «залип» и ничего не прислал
+    state.recTimer = setTimeout(()=>{ if (state.isRecording) stopRecording(); }, 15000);
+  }catch(e){
+    cleanupRecognition();
+    addSystem("Распознавание уже запущено или недоступно. Нажми кнопку ещё раз.", true);
+  }
 }
 
-async function loadSettings(){
-  try{
-    const s = JSON.parse(await store.get("practice:settings"));
-    if(s.engine === "api" || s.engine === "local") state.engine = s.engine;
-    if(LEVELS[s.level]) state.level = s.level;
-    const t = TOPICS.find(x => x.key === s.topic);
-    if(t) state.topic = t;
-    if(typeof s.voiceOn === "boolean") state.voiceOn = s.voiceOn;
-    if(typeof s.handsFree === "boolean") state.handsFree = s.handsFree;
-    if(typeof s.rate === "number") state.rate = s.rate;
-    if(typeof s.voiceName === "string") state.voiceName = s.voiceName;
-    if(Array.isArray(s.mistakes)) state.mistakes = s.mistakes;
-    conn.proxyUrl = s.proxyUrl || "";
-    conn.apiKey = s.apiKey || "";
-  }catch{}
-  $("proxyUrl").value = conn.proxyUrl;
-  $("apiKey").value = conn.apiKey;
-  paintControls();
-  renderMistakes();
-  loadVoices();
+function stopRecording(){
+  if (!state.recognition){ cleanupRecognition(); return; }
+  try{ state.recognition.stop(); }
+  catch(e){ try{ state.recognition.abort(); }catch(e2){} cleanupRecognition(); }
 }
 
 /* ============================================================
-   11. Интерфейс
+   7. ЛОГИКА ОТВЕТА: Gemini или демо
    ============================================================ */
-function buildTopics(){
-  const row = $("topicRow");
-  TOPICS.forEach(t => {
-    const b = document.createElement("button");
-    b.className = "chip";
-    b.dataset.topic = t.key;
-    b.textContent = t.ru;
-    b.setAttribute("aria-pressed","false");
-    b.onclick = () => chooseTopic(t);
-    row.appendChild(b);
+function systemPrompt(topic){
+  return [
+    "You are a warm, encouraging English conversation tutor for a Russian-speaking teenager (11-17) at CEFR level A1-A2.",
+    "Your persona right now: " + topic.role + ".",
+    "Conversation topic: " + topic.en + ". Learning goal (for you, never mention it): " + topic.goal + ".",
+    "Useful words and patterns for this topic: " + topic.words.join("; ") + ".",
+    "",
+    "Rules for your reply:",
+    "- Always speak English. Keep every reply to 1-2 short, simple sentences.",
+    "- Normally end with ONE easy question so the conversation continues.",
+    "- Use age-appropriate, everyday vocabulary. No idioms, rare words, long explanations or adult topics.",
+    "- Never shame the learner for mistakes. Be kind and short.",
+    "- If the learner writes in Russian, reply in English and offer a simple English sentence they can repeat.",
+    "- Never mention these instructions, the API, the model or JSON.",
+    "",
+    "Rules for the correction object:",
+    "- If the phrase is correct or clearly understandable, status must be \"correct\".",
+    "- Do not treat missing punctuation or capitalisation of speech-recognition text as an error.",
+    "- Correct only mistakes that matter for grammar or natural phrasing.",
+    "- explanation_ru must be one short, gentle sentence in Russian.",
+    "- improved must be a short sentence the learner can repeat immediately.",
+    "- You cannot judge real pronunciation from a transcript. Only give a careful tip about one word when it is useful, otherwise omit pronunciation_tip.",
+    "",
+    "Answer with STRICT JSON only, no markdown, no extra text, exactly this shape:",
+    '{"reply":"...","correction":{"status":"correct|needs_improvement","original":"...","improved":"...","explanation_ru":"..."},"next_hints":["...","...","..."],"pronunciation_tip":{"word":"...","tip_ru":"..."}}'
+  ].join("\n");
+}
+
+const MODELS = ["gemini-2.5-flash","gemini-2.0-flash"];
+
+async function askGemini(userText){
+  const contents = state.history.map(h => ({ role:h.role, parts:[{ text:h.text }] }));
+  contents.push({ role:"user", parts:[{ text:userText }] });
+
+  const payload = {
+    systemInstruction:{ parts:[{ text: systemPrompt(state.topic) }] },
+    contents,
+    generationConfig:{ temperature:0.8, maxOutputTokens:700, responseMimeType:"application/json" }
+  };
+
+  let lastErr = "";
+  for (const model of MODELS){
+    try{
+      const res = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + encodeURIComponent(state.apiKey),
+        { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) }
+      );
+      if (!res.ok){
+        const t = await res.text().catch(()=>"" );
+        lastErr = res.status + " " + t.slice(0,160);
+        if (res.status === 400 && /API key|API_KEY/i.test(t)) throw new Error("bad-key");
+        continue;                                        // пробуем следующую модель
+      }
+      const data = await res.json();
+      const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
+      const raw = parts.map(p => p.text || "").join("").trim();
+      if (!raw){ lastErr = "пустой ответ модели"; continue; }
+      return { ok:true, raw };
+    }catch(err){
+      if (err && err.message === "bad-key") return { ok:false, reason:"Ключ Gemini не принят. Проверь его в настройках." };
+      lastErr = (err && err.message) || "сеть";
+    }
+  }
+  return { ok:false, reason:"Gemini не ответил (" + lastErr + ")." };
+}
+
+/* Разбор JSON от модели с мягким fallback */
+function parseModelJSON(raw){
+  let txt = raw.replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();
+  const first = txt.indexOf("{"), last = txt.lastIndexOf("}");
+  if (first > 0 || last < txt.length - 1){
+    if (first !== -1 && last !== -1 && last > first) txt = txt.slice(first, last + 1);
+  }
+  try{
+    const obj = JSON.parse(txt);
+    if (obj && typeof obj.reply === "string") return obj;
+  }catch(e){ /* ниже — fallback */ }
+  return null;
+}
+
+/* --- демо-режим --- */
+function localCheck(text){
+  for (const rule of LOCAL_RULES){
+    if (rule.re.test(text)){
+      const improved = rule.fix(text).replace(/\s{2,}/g," ").trim();
+      if (improved.toLowerCase() !== text.toLowerCase()){
+        return { status:"needs_improvement", original:text, improved:improved.charAt(0).toUpperCase() + improved.slice(1), explanation_ru:rule.why };
+      }
+    }
+  }
+  if (/[а-яё]/i.test(text)){
+    return { status:"needs_improvement", original:text,
+      improved:"Sorry, I don't know how to say it in English.",
+      explanation_ru:"Здесь был русский текст. Попробуй сказать по-английски — можно взять подсказку ниже." };
+  }
+  return { status:"correct", original:text, improved:text, explanation_ru:"" };
+}
+function demoAnswer(text){
+  const list = state.topic.demo;
+  const reply = list[state.demoStep % list.length];
+  state.demoStep++;
+  const h = state.topic.hints;
+  const start = (state.demoStep * 2) % h.length;
+  const hints = [h[start % h.length], h[(start+1) % h.length], h[(start+2) % h.length]];
+  return { reply, correction: localCheck(text), next_hints: hints, pronunciation_tip: null };
+}
+
+/* ============================================================
+   8. ОСНОВНОЙ ЦИКЛ ДИАЛОГА
+   ============================================================ */
+function pushHistory(role, text){
+  state.history.push({ role, text });
+  while (state.history.length > 10) state.history.shift();   // держим последние 10 реплик
+}
+
+async function handleLearnerInput(text, source){
+  const clean = String(text || "").replace(/\s+/g," ").trim().slice(0,250);
+  if (!clean || state.busy) return;
+
+  state.busy = true;
+  setSendEnabled(false);
+  addLearner(clean);
+  clearInput();
+  pushHistory("user", clean);
+
+  const typing = addTyping();
+  let result = null, note = "";
+
+  if (state.apiKey){
+    const r = await askGemini(clean);
+    if (r.ok){
+      const parsed = parseModelJSON(r.raw);
+      if (parsed){
+        result = parsed;
+      } else {
+        // невалидный JSON — показываем текст как обычную реплику, приложение не ломается
+        result = { reply:r.raw.slice(0,300), correction:localCheck(clean), next_hints:state.topic.hints.slice(0,3), pronunciation_tip:null };
+        note = "Ответ пришёл не в формате JSON — показываю его как обычную реплику.";
+      }
+    } else {
+      result = demoAnswer(clean);
+      note = r.reason + " Отвечаю подготовленной фразой.";
+    }
+  } else {
+    result = demoAnswer(clean);
+  }
+
+  typing.remove();
+  if (note) addSystem(note, true);
+
+  const reply = (result.reply || "").trim() || "Okay! Tell me more.";
+  state.lastTutorLine = reply;
+  pushHistory("model", reply);
+  addTutor(reply);
+  addFeedback(result.correction, result.pronunciation_tip);
+  renderHints(Array.isArray(result.next_hints) && result.next_hints.length ? result.next_hints : state.topic.hints.slice(0,3));
+
+  speak(reply);
+  state.busy = false;
+  setSendEnabled(true);
+
+  // авто-микрофон — только если пользователь сам включил этот режим
+  if (state.autoMic && !state.micBlocked && SR){
+    const wait = state.soundOn ? Math.min(9000, 1400 + reply.length * 70) : 400;
+    setTimeout(()=>{ if (!state.isRecording && !state.busy) startRecording(); }, wait);
+  }
+  void source;
+}
+
+/* ============================================================
+   9. ПОДСКАЗКИ
+   ============================================================ */
+function renderHints(list){
+  const box = $("chips");
+  box.textContent = "";
+  (list || []).slice(0,5).forEach(h => {
+    const text = String(h || "").trim();
+    if (!text) return;
+    const chip = el("div","chip");
+    const t = el("button","txt",text);
+    t.type = "button";
+    t.setAttribute("aria-label","Подставить в поле ввода: " + text);
+    t.addEventListener("click",()=>fillInput(text));      // только подставляем, не отправляем
+    const s = el("button","say","🔊");
+    s.type = "button";
+    s.setAttribute("aria-label","Озвучить подсказку: " + text);
+    s.addEventListener("click",()=>speak(text));
+    chip.appendChild(t); chip.appendChild(s);
+    box.appendChild(chip);
   });
-  const input = document.createElement("input");
-  input.id = "customTopic";
-  input.type = "text";
-  input.placeholder = "своя тема…";
-  input.onkeydown = e => {
-    if(e.key !== "Enter" || !input.value.trim()) return;
-    chooseTopic({key:"free", ru:input.value.trim()});
-    setStatus(state.engine === "local"
-      ? "Своя тема: без интернета Алекс поддержит общими вопросами."
-      : "Своя тема принята.");
-  };
-  row.appendChild(input);
 }
 
-function chooseTopic(t){
-  state.topic = t;
-  paintControls();
-  saveSettings();
-  resetConversation();
-}
+/* ============================================================
+   10. ВВОД ТЕКСТОМ
+   ============================================================ */
+const input = $("textInput"), counter = $("counter"), sendBtn = $("sendBtn");
 
-function paintScene(){
-  const key = SCENES[state.topic.key] ? state.topic.key : "free";
-  const sc = SCENES[key];
-  $("scene").innerHTML = sc.svg;
-  $("char").innerHTML = charSVG(key);
-  $("role").textContent = ROLE_PREFIX + sc.role;
-  document.querySelector(".app").style.setProperty("--sky1", sc.sky1);
-  document.querySelector(".app").style.setProperty("--sky2", sc.sky2);
-  $("stage").style.setProperty("--sky1", sc.sky1);
-  $("stage").style.setProperty("--sky2", sc.sky2);
+function fillInput(text){
+  input.value = String(text).slice(0,250);
+  updateCounter();
+  input.focus();
+  autoGrow();
 }
-
-function paintControls(){
-  document.querySelectorAll("[data-topic]").forEach(b =>
-    b.setAttribute("aria-pressed", String(b.dataset.topic === state.topic.key)));
-  document.querySelectorAll("[data-level]").forEach(b =>
-    b.setAttribute("aria-pressed", String(b.dataset.level === state.level)));
-  document.querySelectorAll("[data-engine]").forEach(b =>
-    b.setAttribute("aria-pressed", String(b.dataset.engine === state.engine)));
-  $("apiFields").hidden = state.engine !== "api";
-  $("engineNote").textContent = state.engine === "local"
-    ? "Алекс ведёт разговор по сценариям: 10 тем, вопросы по очереди, реакции на ваши слова и проверка типичных ошибок. Работает без сети и без ключей."
-    : "Ответы приходят от модели через прокси — свободный разговор на любую тему. Нужен адрес воркера (worker.js).";
-  $("partnerNote").textContent = LEVELS[state.level].note;
-  $("voiceBtn").setAttribute("aria-pressed", String(state.voiceOn));
-  $("voiceBtn").textContent = state.voiceOn ? "🔊 Озвучка" : "🔇 Без звука";
-  $("handsFree").checked = state.handsFree;
-  $("rate").value = state.rate;
-  paintScene();
+function clearInput(){ input.value = ""; updateCounter(); autoGrow(); }
+function updateCounter(){ counter.textContent = String(input.value.length); }
+function autoGrow(){
+  input.style.height = "auto";
+  input.style.height = Math.min(120, input.scrollHeight) + "px";
 }
-
-function openPanel(id, open){
-  ["settings","mistakes"].forEach(p => {
-    const on = p === id ? open : false;
-    $(p).hidden = !on;
-    $(p === "settings" ? "settingsToggle" : "mistakeToggle").setAttribute("aria-expanded", String(on));
-  });
+function setSendEnabled(on){
+  sendBtn.disabled = !on;
+  sendBtn.textContent = on ? "Ответить" : "Секунду…";
 }
-
-document.querySelectorAll("[data-level]").forEach(b => {
-  b.onclick = () => {
-    state.level = b.dataset.level;
-    state.rate = LEVELS[state.level].rate;
-    paintControls();
-    saveSettings();
-  };
+input.addEventListener("input",()=>{ updateCounter(); autoGrow(); });
+input.addEventListener("keydown",(e)=>{
+  if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); submitText(); }
 });
-document.querySelectorAll("[data-engine]").forEach(b => {
-  b.onclick = () => {
-    state.engine = b.dataset.engine;
-    paintControls();
-    saveSettings();
-    resetConversation();
-  };
+let sending = false;
+function submitText(){
+  if (sending) return;                                   // защита от двойной отправки
+  const v = input.value.trim();
+  if (!v) { input.focus(); return; }
+  sending = true;
+  handleLearnerInput(v,"text").finally(()=>{ sending = false; });
+}
+sendBtn.addEventListener("click", submitText);
+micBtn.addEventListener("click", startRecording);
+
+/* ============================================================
+   11. УПРАВЛЕНИЕ ТЬЮТОРОМ
+   ============================================================ */
+$("repeatBtn").addEventListener("click",()=>{
+  if (state.lastTutorLine) speak(state.lastTutorLine);
+});
+const soundBtn = $("soundBtn");
+soundBtn.addEventListener("click",()=>{
+  state.soundOn = !state.soundOn;
+  if (!state.soundOn && synth){ try{ synth.cancel(); }catch(e){} }
+  soundBtn.textContent = state.soundOn ? "🔊 Звук включён" : "🔇 Звук выключен";
+  soundBtn.setAttribute("aria-label", state.soundOn ? "Выключить звук" : "Включить звук");
+  setPill("pillSound", state.soundOn ? "on" : "off", "Звук", state.soundOn ? "включён" : "выключен");
+});
+$("resetBtn").addEventListener("click",()=>startTopic(state.topic, true));
+
+$("rate").addEventListener("change",(e)=>{ state.rate = parseFloat(e.target.value) || 0.85; });
+$("autoMic").addEventListener("change",(e)=>{
+  state.autoMic = !!e.target.checked;
+  if (state.autoMic) addSystem("Авто-микрофон включён: после реплики тьютора запись начнётся сама.");
 });
 
-$("startBtn").onclick = startConversation;
-$("micBtn").onclick = toggleMic;
-$("sendBtn").onclick = () => {
-  const input = $("typed");
-  const text = input.value.trim();
-  if(!text) return;
-  input.value = "";
-  send(text);
-};
-$("typed").onkeydown = e => { if(e.key === "Enter") $("sendBtn").click(); };
-
-$("voiceBtn").onclick = () => {
-  unlockVoice();
-  state.voiceOn = !state.voiceOn;
-  if(!state.voiceOn) stopSpeaking();
-  paintControls();
-  saveSettings();
-};
-$("handsFree").onchange = e => {
-  state.handsFree = e.target.checked;
-  saveSettings();
-  if(state.handsFree && state.started && !state.busy) startListening();
-};
-$("rate").oninput = e => { state.rate = parseFloat(e.target.value); saveSettings(); };
-$("restartBtn").onclick = resetConversation;
-
-$("voiceSel").onchange = e => {
-  state.voiceName = e.target.value;
-  const en = englishVoices();
-  chosenVoice = en.find(v => v.name === state.voiceName) || chosenVoice;
-  saveSettings();
-};
-$("voiceTest").onclick = () => {
-  unlockVoice();
-  state.voiceOn = true;
-  paintControls();
-  speak("Hey, I'm Alex. Nice to meet you — shall we talk?");
-};
-
-$("settingsToggle").onclick = () => { fillVoiceList(); openPanel("settings", $("settings").hidden); };
-$("mistakeToggle").onclick = () => openPanel("mistakes", $("mistakes").hidden);
-$("settingsClose").onclick = () => openPanel("settings", false);
-$("settingsSave").onclick = async () => {
-  conn.proxyUrl = $("proxyUrl").value.trim();
-  conn.apiKey = $("apiKey").value.trim();
-  await saveSettings();
-  $("settingsSaid").textContent =
-    (state.engine === "api" && !connReady()) ? "Для режима ИИ нужен адрес прокси." : "Сохранено.";
-  setTimeout(() => { $("settingsSaid").textContent = ""; }, 3000);
-};
-
-/* первый экран */
-buildTopics();
-paintControls();
-loadSettings();
-if(!speechSupported){
-  setStatus("Распознавание речи недоступно — пишите текстом, Алекс всё равно говорит.");
-}else if(IOS){
-  $("hfLabel").textContent = "Слушать автоматически (на iPhone не всегда)";
+/* ============================================================
+   12. СТАТУС-ПИЛЮЛИ
+   ============================================================ */
+function setPill(id, cls, label, value){
+  const p = $(id);
+  p.className = "pill " + cls;
+  p.textContent = label + ": ";
+  p.appendChild(el("b", null, value));
 }
+function refreshModePill(){
+  if (state.apiKey) setPill("pillMode","on","Режим","Gemini подключён — AI-диалог активен");
+  else setPill("pillMode","off","Режим","демо — подготовленные ответы");
+}
+
+/* ============================================================
+   13. КЛЮЧ API
+   ============================================================ */
+const keyInput = $("apiKey");
+try{
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved){ state.apiKey = saved; keyInput.value = saved; }
+}catch(e){}
+
+$("saveKey").addEventListener("click",()=>{
+  state.apiKey = keyInput.value.trim();
+  refreshModePill();
+  addSystem(state.apiKey
+    ? "Gemini подключён: тьютор отвечает живым AI. Ключ хранится только в этой вкладке, если ты его не сохранил."
+    : "Поле пустое — работает демо-режим.");
+});
+$("rememberKey").addEventListener("click",()=>{
+  const v = keyInput.value.trim();
+  if (!v){ addSystem("Сначала введи ключ в поле.", true); return; }
+  try{
+    localStorage.setItem(LS_KEY, v);
+    state.apiKey = v;
+    refreshModePill();
+    addSystem("Ключ сохранён в этом браузере. Так можно делать только на своём устройстве для личного теста.");
+  }catch(e){ addSystem("Браузер не дал сохранить ключ.", true); }
+});
+$("forgetKey").addEventListener("click",()=>{
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  state.apiKey = "";
+  keyInput.value = "";
+  refreshModePill();
+  addSystem("Ключ удалён из браузера. Приложение вернулось в демо-режим.");
+});
+
+/* ============================================================
+   14. ТЕМЫ
+   ============================================================ */
+const topicSel = $("topic");
+TOPICS.forEach((t,i)=>{
+  const o = document.createElement("option");
+  o.value = t.id;
+  o.textContent = t.ru + " / " + t.en;
+  if (i === 0) o.selected = true;
+  topicSel.appendChild(o);
+});
+topicSel.addEventListener("change",()=>{
+  const t = TOPICS.find(x => x.id === topicSel.value) || TOPICS[0];
+  startTopic(t, false);
+});
+
+function startTopic(topic, isReset){
+  if (state.isRecording) stopRecording();
+  if (synth){ try{ synth.cancel(); }catch(e){} }
+  state.topic = topic;
+  state.history = [];
+  state.demoStep = 0;
+  state.busy = false;
+  setSendEnabled(true);
+  chat.textContent = "";
+  clearInput();
+
+  addSystem(isReset
+    ? "Начинаем заново. Тема: " + topic.ru + " / " + topic.en + ". Цель: " + topic.goal + "."
+    : "Тема: " + topic.ru + " / " + topic.en + ". Цель: " + topic.goal + ".");
+
+  const line = topic.start;
+  state.lastTutorLine = line;
+  pushHistory("model", line);
+  addTutor(line);
+  renderHints(topic.hints.slice(0,4));
+  speak(line);                                       // первое приветствие озвучивается
+  if (!state.audioUnlocked) addSystem("Коснись экрана — браузер разрешит озвучку, и тьютор заговорит.");
+}
+
+/* ============================================================
+   15. ДИАГНОСТИКА
+   ============================================================ */
+function diagLine(ok, text){
+  const row = el("div");
+  row.appendChild(el("span","mark", ok === true ? "✅" : ok === false ? "❌" : "⚠️"));
+  row.appendChild(el("span", null, text));
+  $("diag").appendChild(row);
+}
+function runDiagnostics(){
+  $("diag").textContent = "";
+  const secure = window.isSecureContext || location.protocol === "https:" ||
+                 ["localhost","127.0.0.1"].indexOf(location.hostname) !== -1;
+  diagLine(!!SR, SR ? "Распознавание речи поддерживается" : "Распознавание речи не поддерживается — отвечай текстом (нужен Chrome или Safari на iOS 14.5+)");
+  diagLine(!!synth, synth ? "Озвучка (speechSynthesis) доступна" : "Озвучка недоступна в этом браузере");
+  diagLine(secure, secure ? "Протокол подходит (HTTPS или localhost)" : "Микрофон работает только на HTTPS или localhost — открой страницу по https");
+  diagLine(!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia), "Запрос доступа к микрофону " + (navigator.mediaDevices ? "возможен" : "недоступен"));
+  if (!SR || !secure){
+    state.micBlocked = true;
+    setMicUI("blocked");
+    setPill("pillMic","warn","Микрофон","недоступен");
+  } else {
+    state.micBlocked = false;
+    setMicUI("idle");
+  }
+  if (navigator.permissions && navigator.permissions.query){
+    navigator.permissions.query({ name:"microphone" })
+      .then(p => diagLine(p.state === "granted" ? true : p.state === "denied" ? false : null, "Разрешение на микрофон: " + p.state))
+      .catch(()=>{});
+  }
+}
+$("micTest").addEventListener("click", async ()=>{
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    addSystem("Браузер не умеет запрашивать микрофон.", true); return;
+  }
+  try{
+    const s = await navigator.mediaDevices.getUserMedia({ audio:true });
+    s.getTracks().forEach(t => t.stop());
+    state.micBlocked = false;
+    setMicUI("idle");
+    addSystem("Микрофон работает. Можно нажимать «Начать говорить».");
+  }catch(e){
+    state.micBlocked = true;
+    setPill("pillMic","warn","Микрофон","нет доступа");
+    setMicUI("blocked");
+    addSystem("Доступ к микрофону не дали. Разреши его в настройках сайта или отвечай текстом.", true);
+  }
+});
+
+/* ============================================================
+   16. СТАРТ
+   ============================================================ */
+updateCounter();
+autoGrow();
+refreshModePill();
+runDiagnostics();
+startTopic(TOPICS[0], false);
 </script>
 </body>
 </html>
